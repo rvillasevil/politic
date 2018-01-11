@@ -1,0 +1,8 @@
+ <div class="resultados">
+		
+ </div>
+
+ <%= form_tag municipios_path, method: :get, remote: true, id: "search-form" do %>
+   <%= text_field_tag :search, params[:search] %>
+   <%= submit_tag "Search municipio", name: nil %>
+ <% end %>

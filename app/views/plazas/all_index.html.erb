@@ -1,0 +1,120 @@
+<% provide(:title, 'Todos los círculos') %>
+	<div class="container">
+    <div class="row">
+      <aside class="col-sm-2" style="">
+        <section class="user_info">
+          <%= render 'shared/user_info' %>
+        </section>
+      </aside>
+
+<!-- Plazas que no son acciones -->
+<% @action = params[:accion] %>
+<% @causa = params[:causa] %>
+
+      <div class="col-sm-7">
+        <div class="index_plazas">
+          <ul class="plazas">
+            <li class="search">
+              <ul class="search_form" style="width: 100%;">
+                <%= form_tag('allplazas', method: :get) do %>
+                <li class="boton_search">
+                  <%= submit_tag 'Search', class: "btn btn-primary btn-sm", style: "margin: 0px; padding: 3px 6px;" %>
+                  
+                </li>
+                <li style="display: inline-flex; width: 70%;">
+                  <%= text_field_tag :tern, params[:tern], placeholder: ' Enter search term...', style: "margin: 0px;" %>
+                </li>
+                <% end %>
+
+              </ul>
+            </li>  
+            <li class="titulo">
+              <ul>
+                <li>
+                  <span style="font-size: 15px;"><b><%= link_to "Atras", :back %></b></span>
+                </li>
+                <li class="right">
+                <% if @action != "true" %>
+                  <% if @causa != "true" %>
+                    <button type="button" class="btn btn-primary btn-sm"><span style="font-size: 12px;"><%= link_to "Nuevo lobby", new_user_plaza_path(:user_id => current_user.id), {style: "color: white"} %></span>
+                    </button>
+                  <% else %>
+                    <button type="button" class="btn btn-primary btn-sm">
+                    <span style="font-size: 12px;"><%= link_to "Nueva causa", new_user_plaza_path(:user_id => current_user.id, causa: "true"), {style: "color: white"} %></span>
+                    </button>
+                  <% end %>
+                <% else %>
+                    <button type="button" class="btn btn-primary btn-sm">        <span style="font-size: 12px;"><%= link_to "Nueva acción", new_user_plaza_path(:user_id => current_user.id, accion: "true"), {style: "color: white"} %></span>
+                    </button>
+                <% end %>
+                </li>
+              </ul>
+            </li>
+
+
+
+            <% if @action != "true" %>
+              <% if @causa != "true" %>
+              <div style="background-color: white; border-bottom: 1px solid #e6e9ec; padding: 10px;"><h5><b>Todos los Lobbies</b></h5></div> <% @plazas = @plazas.order('created_at DESC').where(causa: nil).where(action: nil) %>
+              <% else %>
+                <div style="background-color: white; border-bottom: 1px solid #e6e9ec; padding: 5px;"><b>Causas</b></div> <% @plazas = @plazas.where(causa: true) %>
+              <% end %>
+            <% else %>
+              <div style="background-color: white; border-bottom: 1px solid #e6e9ec; padding: 5px;"><b>Acciones</b></div> <% @plazas = @plazas.where(action: true) %>
+            <% end %>
+
+            <% @plazas.first(30).each do |plaza| %>
+              <li style="padding-left: 0px; border-bottom: 1px solid #eeeeee;"> 
+                <ul style="display: inline-flex; padding-left: 15px;">
+                  <li style="padding: 10px 0px;">
+                    <%= image_tag plaza.foto.url, class: "img-circle", size: 55 if plaza.foto? %>
+                  </li>
+                  <li style="padding: 0px">
+                    <ul class="texto_plaza" style="padding-left: 10px; padding-top: 5px;">
+                      <li>
+                      <% if @action != "true" %>
+                        <% if @causa != "true" %>
+                          <i class="fa fa-circle-o fa-lg" aria-hidden="true"></i>&nbsp;<% @plazas = @plazas.where(causa: nil).where(action: nil) %>
+                        <% else %>
+                          <i class="fa fa-heart-o fa-lg" aria-hidden="true"></i>&nbsp;<% @plazas = @plazas.where(causa: true) %>
+                        <% end %>
+                      <% else %>
+                          <i class="fa fa-bolt fa-lg" aria-hidden="true"></i>&nbsp;<% @plazas = @plazas.where(action: true) %>
+                      <% end %>
+                        <b><%= link_to plaza.name, user_plaza_path(id: plaza.id, user_id: current_user.id) %></b>
+                      </li>
+                      <li style="font-size: 13px; color: #7e7e81;">
+                        <%= plaza.description %>
+                      </li>
+                      <li style="font-size: 13px; padding-top: 10px;">
+                        <i class="fa fa-users" aria-hidden="true"></i>&nbsp;
+                        <b><%= Group.where(:plaza_id => plaza.id).count %> <span class="texto_oculto">seguidores</b>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        &nbsp;<%= @peticiones = Micropost.where(:plaza_id => plaza.id).where(:petition => true).count %> <span class="texto_oculto">peticiones.</span>
+                      </li>
+                      <li>
+                        <% if logged_in? %>
+                          <% if current_user.admin?  %>
+                            | <%= link_to "delete", plaza, method: :delete, data: { confirm: "You sure?" } %>
+                          <% end %>
+                        <% end %>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            <% end %>
+            <%= will_paginate %>
+          </ul>
+        </div>
+      </div>
+
+      <aside>
+        <div class="col-sm-3" style="margin-top: 15px;">
+          <%= render 'plazas/plazas_recomendadas' %>
+        </div>
+      </aside>
+      
+			<%= will_paginate %>
+  	</div>
+	</div>

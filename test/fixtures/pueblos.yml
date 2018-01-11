@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id_provincia: 1
+  cod_municipio: 1
+  DC: MyString
+  integer: MyString
+  nombre: MyString
+
+two:
+  id_provincia: 1
+  cod_municipio: 1
+  DC: MyString
+  integer: MyString
+  nombre: MyString

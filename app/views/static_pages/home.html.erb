@@ -1,0 +1,577 @@
+<% provide(:title) %>
+<% if logged_in? %>
+  <div class="container">
+    <div class="row">
+
+      <aside class="col-sm-2">
+        <!--<div class="affix" style="width: 14%; max-width: 190px;">-->
+          <section class="user_info">
+            <%= render 'shared/user_info' %>
+            <%# render 'shared/plazas_info' %> 
+            <div style="background-color: white; padding: 10px; border: 1px solid #f7f8f9;">
+              <h3 style="margin-top: 10px;">Hot topics now</h3>
+              <ul style="padding: 0px; list-style: none;">
+                <% @array_off_hashtags.first(10).each do |hashtag| %>
+                  <% unless hashtag == "" %>
+                    <li style="border-bottom: 1px solid #e6e9ec; padding: 5px 0px;">
+                      <ul style="list-style: none; padding: 0px; display: inline-flex;">
+                        <ul style="list-style: none; padding: 0px 5px;">
+                          <li>
+                            <h5 style="font-size: 14px; margin: 0px;">
+                              <i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i>
+                              <b><%= link_to hashtag, hashtag_micropost_path(id: hashtag), style: "color: #9542f4;" %></b>
+                            </h5>
+                          </li>
+                          <li>
+                            <span style="font-size: 12px; color: grey; font-weight: lighter;"><%= Micropost.where(hashtag1: hashtag).count %> posts lately</span>                    
+                          </li>                    
+                        </ul>
+                      </ul>
+                    </li>
+                  <%end%>
+                <% end %>            
+              </ul>
+            </div>                     
+          </section>
+          <div class="stats">
+            <%# render 'shared/stats' %>
+          </div>
+        <!--</div>-->
+      </aside>
+
+      <div class="col-md-6">
+
+        <%= render 'static_pages/sigue_plaza' %>
+
+        <section class="micropost_form">
+          <%= render 'shared/micropost_form' %>
+        </section>
+
+<%
+=begin%>        
+        #photo = doc.xpath('//body//img[@width > 300 or @alt = title]/@src').first
+        photo = doc.xpath('//body//img[@width > 300 or @alt = title]/@src').first
+        #largest_image = doc.search("img").sort_by{|image| image.attributes["height"].value.to_i * image.attributes["width"].value.to_i}.pop
+        #link = doc.at_css("#content//h2/a")[:href]
+<%
+=end%>        
+
+
+        <div style="border: 3px solid #c9ffc6; border-radius: 10px; padding: 5px; background-color: white;">
+          <div style="background-color: white; padding-left: 10px; padding: 5px;">
+            <span style="font-size: 14px;"><h3 style="margin: 5px; width: 70%;">lo más popular</h3>
+            <span style="float: right; margin-top: -20px;">Scroll right &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></span></span>
+          </div>
+          <div class="scroll_masvotados">
+            <% @posts_masvotados.first(10).each do |posts_popular| %>
+              <% @posts_popular = Micropost.where(id: posts_popular) %>
+              <% @posts_popular.first(10).each do |post_popular| %>
+                <li style="/*border: 5px solid #9cf11d; border-radius: 15px; padding: 5px;*/">
+                  <%= link_to micropost_path(id: post_popular), style: "color: black;" do %>
+                    <div>
+                      <% if post_popular.picture? %>
+                        <div class="img" style="max-height: 100px;">
+                          <%= image_tag (post_popular.picture.url), class: "img", size: 200, style: "position: absolute, bottom: 0px; width: 100%; margin-top: -50px;" %>
+                        </div>  
+                          <%= truncate(post_popular.content,length: 150, omission: '... (read)') %>
+                        
+                      <% else %>
+                        <% if post_popular.link? %>
+                          <div class= "title-link">
+                            <div class="img">
+                              <% if post_popular.photo_link != nil %>
+                                <div style="max-height: 100px;">
+                                  <%= image_tag (post_popular.photo_link), class: "img", size: 200, style: "position: absolute, bottom: 0px; width: 100%; margin-top: -50px;" %>                                
+                                </div>
+
+                              <% end %>                             
+                            </div>
+                           
+                            <% if post_popular.title_link != nil %>
+                              <%= truncate(post_popular.title_link, length: 150) %>
+                            <% end %>
+                          </div>
+                          <div class="enlace_texto" style="padding-left: 10px;">
+                            <%= link_to truncate(post_popular.link.scan( /([^>]*)./).first.last, :length => 30), post_popular.link %>
+                          </div>
+                        <% else %>
+                          <%= truncate(post_popular.content, length: 200, omission: '... (read)') %>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  <span style="color: grey; font-size: 12px; float: bottom; padding-left: 10px;">
+                    <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                    <%= post_popular.comments.count %> comments | 
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>&nbsp;<%= post_popular.votes.count %> points 
+                  </span>
+                </li>
+              <% end %>
+            <% end %>  
+          </div>
+        </div>
+
+        <!-- los debates más calientes -->
+        <div class="hot_debate_movil" style="border: 3px solid #eacc9f; border-radius: 10px; padding: 5px; background-color: white; margin-top: 5px;">
+          <div style="background-color: white; padding-left: 10px; padding: 5px;">
+            <span style="font-size: 14px;"><h3 style="margin: 5px; width: 70%;">Hot topics now</h3>
+            <span style="float: right; margin-top: -20px;">Scroll right &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></span></span>
+          </div> 
+
+          <div class="scroll_masvotados">
+            <% if @array_off_hashtags != nil %>
+              <% @array_off_hashtags.first(10).each do |hashtag| %>
+                <% if hashtag != nil %>
+                  <% unless hashtag == "" %>
+                    <li style="padding: 5px 0px;  max-width: 200px; min-width: 120px; margin: 0px; width: 100%;">
+                      <ul style="list-style: none; padding: 0px; display: inline-flex;">
+                        <ul style="list-style: none; padding: 0px 5px;">
+                          <li style="min-width: 120px; max-width: 200px;">
+                            <h5 style="font-size: 14px; margin: 0px;">
+                              <i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i>
+                              <b><%= link_to hashtag, hashtag_micropost_path(id: hashtag), style: "color: #9542f4;" %></b>
+                            </h5>
+                          </li>
+                          <li>
+                            <span style="font-size: 12px; color: grey; font-weight: lighter;"><%= Micropost.where(hashtag1: hashtag).count %> posts lately</span>                    
+                          </li>                    
+                        </ul>
+                      </ul>
+                    </li>
+                  <%end%>
+                <% end %>
+              <% end %> 
+            <% end %>            
+          </div>
+
+        </div>
+
+        <% @array_of_hot_posts = Micropost.where(petition: true).where(id: @array_of_hot_posts) %>
+        <!-- los debates más calientes -->
+        <div class="hot_debate_movil" style="border: 3px solid #e2c6ff; border-radius: 10px; padding: 5px; background-color: white; margin-top: 5px;">
+          <div style="background-color: white; padding-left: 10px; padding: 5px;">
+            <span style="font-size: 14px;"><h3 style="margin: 5px; width: 70%;">los debates más hot</h3>
+            <span style="float: right; margin-top: -20px;">Scroll right &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></span></span>
+          </div>        
+          <% @array_off_hashtags %>     
+          <div class="scroll_masvotados">
+            <% @array_of_hot_posts.first(10).each do |post_popular| %>
+                <li>
+                  <%= link_to micropost_path(id: post_popular), style: "color: black;" do %>
+                    <div>
+                      <% if post_popular.picture? %>
+                        <div class="img" style="max-height: 100px;">
+                          <%= image_tag (post_popular.picture.url), class: "img", size: 200, style: "position: absolute, bottom: 0px; width: 100%; margin-top: -50px;" %>
+                        </div>  
+                          <%= truncate(post_popular.content,length: 150, omission: '... (read)') %>
+                        
+                      <% else %>
+                        <% if post_popular.link? %>
+                          <div class= "title-link">
+                            <div class="img">
+                              <% if post_popular.photo_link != nil %>
+                                <div style="max-height: 100px;">
+                                  <%= image_tag (post_popular.photo_link), class: "img", size: 200, style: "position: absolute, bottom: 0px; width: 100%; margin-top: -50px;" %>                                
+                                </div>
+
+                              <% end %>                             
+                            </div>
+                           
+                            <% if post_popular.title_link != nil %>
+                              <%= truncate(post_popular.title_link, length: 150) %>
+                            <% end %>
+                          </div>
+                          <div class="enlace_texto" style="padding-left: 10px;">
+                            <%= link_to truncate(post_popular.link.scan( /([^>]*)./).first.last, :length => 30), post_popular.link %>
+                          </div>
+                        <% else %>
+                          <%= truncate(post_popular.content, length: 200, omission: '... (read)') %>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  <span style="color: grey; font-size: 12px; float: bottom; padding-left: 10px; font-weight:  normal;">
+                    <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                    <%= post_popular.comments.count %> comments | 
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>&nbsp;<%= post_popular.votes.count %> points 
+                  </span>
+                </li>
+            <% end %>
+          </div>
+        </div>
+        
+
+        <div class="home_popular">
+          <ul>
+            <li class="popular" style="text-align: center;"> 
+              <h3 style="margin: 0px; font-size: 16px;"><%= link_to "now", 'popular_last_day', style: "color: grey;" %></h3>
+            </li>            
+            <li class="home" style="text-align: center;">
+              <h3 style="margin: 0px;"><%= link_to "home", root_url %></h3>
+            </li>
+            <li class="popular" style="text-align: center;">
+              <h3 style="margin: 0px; font-size: 16px;"><%= link_to "popular", '/popular', style: "color: grey;" %></h3>
+            </li>
+          </ul>
+        </div>
+
+        <% if @feed_items.any? %>
+          <%= render 'shared/feed' %>
+        <% else %>
+          <div class="instrucciones">
+            <h5>Aún no dispones de posts dentro de tu red política, echa un vistazo a los más populares, empieza a seguir a otros usuarios, echa un vistazo a los lobbies que más te interesen o consulta los candidatos que hay en tu localidad. </br>
+          
+            <b><%= link_to "Lo más votado", '/popular' %> o mira los debates más activos:</h5></b>
+          </div>
+
+          <div class="hot_debate_movil" style="border: 3px solid #e2c6ff; border-radius: 10px; padding: 5px; background-color: white; margin-top: 15px; display: block;">
+            <div style="background-color: white; padding-left: 10px; padding: 5px;">
+              <span style="font-size: 14px;"><h3 style="margin: 5px; width: 70%;">los debates más hot</h3>
+              <span style="float: right; margin-top: -20px;">Scroll right &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></span></span>
+            </div>        
+            <% @array_off_hashtags %>     
+            <div class="scroll_masvotados">
+              <% @array_of_hot_posts.first(10).each do |post_popular| %>
+                  <li>
+                    <%= link_to micropost_path(id: post_popular), style: "color: black;" do %>
+                      <div>
+                        <% if post_popular.picture? %>
+                          <div class="img" style="max-height: 100px;">
+                            <%= image_tag (post_popular.picture.url), class: "img", size: 200, style: "position: absolute, bottom: 0px; width: 100%; margin-top: -50px;" %>
+                          </div>  
+                            <%= truncate(post_popular.content,length: 150, omission: '... (read)') %>
+                          
+                        <% else %>
+                          <% if post_popular.link? %>
+                            <div class= "title-link">
+                              <div class="img">
+                                <% if post_popular.photo_link != nil %>
+                                  <div style="max-height: 100px;">
+                                    <%= image_tag (post_popular.photo_link), class: "img", size: 200, style: "position: absolute, bottom: 0px; width: 100%; margin-top: -50px;" %>                                
+                                  </div>
+
+                                <% end %>                             
+                              </div>
+                             
+                              <% if post_popular.title_link != nil %>
+                                <%= truncate(post_popular.title_link, length: 150) %>
+                              <% end %>
+                            </div>
+                            <div class="enlace_texto" style="padding-left: 10px;">
+                              <%= link_to truncate(post_popular.link.scan( /([^>]*)./).first.last, :length => 30), post_popular.link %>
+                            </div>
+                          <% else %>
+                            <%= truncate(post_popular.content, length: 200, omission: '... (read)') %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                    <span style="color: grey; font-size: 12px; float: bottom; padding-left: 10px; font-weight:  normal;">
+                      <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                      <%= post_popular.comments.count %> comments | 
+                      <i class="fa fa-thumbs-o-up" aria-hidden="true"></i><i class="fa fa-thumbs-o-down" aria-hidden="true"></i>&nbsp;<%= post_popular.votes.count %> points 
+                    </span>
+                  </li>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="hot_debate_movil" style="border: 3px solid #e2c6ff; border-radius: 10px; padding: 5px; background-color: white; margin-top: 15px; display: block;">
+            <div style="background-color: white; padding-left: 10px; padding: 5px;">
+              <span style="font-size: 14px;"><h3 style="margin: 5px; width: 70%;">los debates más hot</h3>
+              <span style="float: right; margin-top: -20px;">Scroll right &nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></span></span>
+            </div>
+
+        <% end %>
+
+      </div>
+
+      <div class="col-sm-4">
+        <div class="hot_debate_web" style="background-color: white; padding: 10px; border: 1px solid #f7f8f9;">
+          <h3 style="margin-top: 10px;">Los consultas más debatidas ahora mismo</h3>
+          <ul style="padding: 0px; list-style: none;">
+            <% @array_of_hot_posts.first(5).each do |micropost| %>
+              <li style="border-bottom: 1px solid #e6e9ec; padding: 5px 0px;">
+                <% if micropost.title %>
+                <ul style="list-style: none; padding: 0px; display: inline-flex;">
+                  <li>
+                    <%= image_tag (micropost.picture), class: "img-circle", size: 50 if micropost.picture? %>
+                  </li>
+                  <ul style="list-style: none; padding: 0px 5px;">
+                    <li>
+                      <h5 style="font-size: 14px; margin: 0px;"><b><%= link_to truncate(micropost.title, length: 70, omission: '...'), micropost_path(id: micropost), style: "color: #1DA1F2;" if micropost.title? %></b></h5>
+                    </li>
+                    <li>
+                      <span style="font-size: 12px; color: grey; font-weight: lighter;"><%= micropost.comments.count %> comments</span>                    
+                    </li>                    
+                  </ul>
+                </ul>
+                
+                <%else%>
+                  <h5 style="font-size: 14px;"><%= truncate(micropost.content, length: 150, omission: '...(más)') %></5>
+                <%end%>
+              </li>
+            <% end %>            
+          </ul>
+        </div>
+
+         
+      
+        <div style="margin-top: 15px;">
+        <!--<div class="affix" style="width: 25%;">-->
+          <%# render 'microposts/petition_short' %>
+
+          <div class="hot_topics" style="background-color: white; border: 1px solid #f7f8f9;">
+            <h3 style="margin-top: 10px;">Hot topics now</h3>
+            <ul style="list-style: none;">
+              <% @array_off_hashtags.first(10).each do |hashtag| %>
+                <% unless hashtag == "" %>
+                  <li style="border-bottom: 1px solid #e6e9ec; padding: 5px 0px;">
+                    <ul style="list-style: none; padding: 0px; display: inline-flex;">
+                      <ul style="list-style: none; padding: 0px 5px;">
+                        <li>
+                          <h5 style="font-size: 14px; margin: 0px;">
+                            <i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i>
+                            <b><%= link_to hashtag, hashtag_micropost_path(id: hashtag), style: "color: #9542f4;" %></b>
+                          </h5>
+                        </li>
+                        <li>
+                          <span style="font-size: 12px; color: grey;"><%= Micropost.where(hashtag1: hashtag).count %> posts lately</span>                    
+                        </li>                    
+                      </ul>
+                    </ul>
+                  </li>
+                <%end%>
+              <% end %>            
+            </ul>
+          </div>
+
+          <%# render 'plazas/action_short' %>
+
+          <%# render 'plazas/causa_short' %>          
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+<% else %>
+  <div class="home_page">
+
+    <div class="container-fluid" style="background-color: white; margin-top: -5px;">
+      <h1 style="font-weight: lighter;">El mejor partido político de la historia</h1>
+      <h1 style="line-height: 22px; font-weight: bolder;"> How would the world be like if we governed it?</h1>
+      <h3 style="line-height: 22px; font-weight: lighter;"> ¿Cómo sería el mundo si lo gobernasemos nosotros?</h3>
+
+      <div class="wrapper">
+        <%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary",  style: "background-color: white; border: 1px solid #0084B4; color: #0084B4;" %>
+        <%= link_to "Login", login_path, class: "btn btn-lg btn-primary", style: "background-color: #0084B4;" %>
+      </div>      
+    </div>
+
+    <div class="imagen_principal">
+      <div class="container-fluid" style="margin: 0px; width: 40%; max-width: 1000px; min-width: 200px; background-color: #0084B4; position: relative; top: 120px; ">
+        <span style="background-color: #0084B4; color: white; font-weight: lighter;">Una nueva relación con la política, y los políticos.</span>
+      </div>   
+    </div>
+
+    <div class="que_es" style="width: 99vw;">
+      <h1 style="margin: 30px 0px;"><b>Polittizen tiene el objetivo de conectar a personas que buscan nuevos políticos y politicas, con personas que quieran llevarlas a cabo.</b></h1>
+      <h3 style="font-weight: lighter; color: white;">Millones de personas por todo el mundo no están conformes con sus políticos ni sus partidos y tienen el deseo de poder hacer de su comunidad un lugar mejor y más justo.</h3>              
+    </div>    
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="new_inicio">
+
+
+            <ul class="titulo" style="border: none;">
+                
+              <li class="element" style="width: 100%;">
+                <h1 style="margin-bottom: 10px;"><i class="fa fa-university fa-3x" aria-hidden="true" style="font-size: 30px;"></i>&nbsp;&nbsp;¿Qué es entonces Polittizen?</h1>
+                <h5 style="margin-bottom: 40px;">Polittizen es la suma de Politics + Citizens.</h5>
+                <ul style="">
+                  <li style="margin-bottom: 50px; border: 5px solid #f4ac41; border-radius: 20px; padding: 20px;">
+                    <h1 style="font-weight: lighter;">1. Red <strike>social</strike> política.</h1>
+                    <h3>Un lugar donde crear tu identidad política.</h3>
+                    <h3 style="line-height: 25px;"><b>polittizen</b> es una herramienta global de comunicación que proporciona a sus usuarios una red política, a través de su software web, que conecta a los ciudadanos que quieran ser profesionales de la política con ciudadanos que quieran colaborar con una nueva forma de hacer política.</h3>
+                  </li>                  
+                  <li style="margin-bottom: 50px; border: 5px solid #1DA1F2; border-radius: 20px; padding: 20px;">
+                    <h1 style="font-weight: lighter;">2. Uber-like para la política.</h1> 
+                    <h3 style="line-height: 25px;">La estructura de los partidos políticos no ha cambiado nada en decadas. ¿Funcionan? </br>
+                    ¿Cómo serán los partidos del futuro?, ¿que está ocurriendo con el resto de sectores tradicionales, como el automovil, la banca o el taxi? </h3>
+                    <h5 style="padding-bottom: 10px;">Política colaborativa, cualquiera ser candidato, entre todos elegimos nuestros representantes y entre todos creamos nuestras políticas.</h5>
+                  </li>
+                  <li style="margin-bottom: 50px; border: 5px solid #e2c6ff; border-radius: 20px; padding: 20px;">
+                    <h1 style="font-weight: lighter;">3. Tecnología y futuro.</h1> 
+                    <h3>El futuro va a suponer importantes cambios en nuestra sociedad, y necesitamos a los mejores para que se hagan cargo.</h3><h5>La toma de decisiones que nos afecta a todos cada vez será más compleja y necesitamos de herramientas tecnológicas que nos permitan alcanzar el desarrollo social, economico y una mayor igualdad.</h5>
+                    <h5 style="padding-bottom: 10px;">Apostamos por un cambio en la concepción de partido político y su sustitución por herramientas basadas en tecnologías que aporten eficiencia, legitimidad y una mayor libertad.</h5>
+                  </li>
+                </ul>   
+              </li>
+            </ul>
+          </div>
+
+          <div style="text-align: center; border-bottom:  1px solid #eeeeee; padding-bottom: 100px;">
+            <%= link_to "Echa un vistazo a lo que está pasando!", popular_path, class: "btn btn-lg btn-primary", style: "background-color: #1DA1F2; color: white; border-radius: 45px; padding: 20px;" %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="ideal" style=""></div>
+   
+
+
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="new_inicio">            
+            <h1 style="margin-bottom: 30px; padding-left: 20px;">Nuestros tres pilares:</h1>
+            <h3 style="font-weight: lighter; margin-bottom: 20px; padding-left: 20px;">Plataforma | Candidatos | Consultas</h3>
+            <ul class="titulo" style="border: none; margin-bottom: 100px;">
+              <li class="element">
+                <ul>                  
+                  <li style="text-align: left; margin-top: 20px; margin-bottom: 20px;">
+                      
+                  </li>
+                  <li>
+                      <h3 style="color: #0084B4; font-weight: lighter;"><i class="fa fa-cogs fa-3x" aria-hidden="true" style="font-size: 22px;"></i>&nbsp;&nbsp;Plataforma</h3>
+                      <h5>Herramienta de comunicación que te permite por un lado crear tu identidad política y por otro lado compartirlo todo con todos tus amigos.</h5>
+
+                      <h5>Un lugar donde descubrir a personas con ganas de hacer cosas que quieran representarnos (nuevos políticos).</h5>
+
+                      <h5>Un lugar donde poder crear propuestas para tu comunidad y donde encontrar los problemas que realmente tienen los ciudadanos (nuevas políticas).</h5>
+
+                      <h5>De la interacción de los perfiles políticos de toda la comunidad surge una red política que nos permita recrear una imagen real de la sociedad, sobre la que basar la toma de decisiones del futuro.</h5>
+                  </li>
+                </ul>               
+              </li>
+              <li class="element">
+                <ul>
+                  <li>
+                      <h3 style="color: #0084B4;; font-weight: lighter;"><i class="fa fa-users fa-3x" aria-hidden="true" style="font-size: 22px;"></i>&nbsp;&nbsp;Represnetantes y usuarios</h3>
+                      <h5>Si queremos cambiar la política debemos conseguir que cualquier persona que quiera participar en la política activa de su ciudad pueda hacerlo.</h5>
+                      <h5>Pensamos que en la política del futuro serán los ciudadanos los que decidan quienes son sus candidatos, por eso la elección dentro de polittizen es entre todos, por todos y para todos, en iguales condiciones; tus ganas de participar y tus ideas te representan.</h5>
+                      <h5 style="background-color: #fc7676; padding: 10px;">¿Te imaginas que sólo te dieran a alegir entre 3 ó 4 candidatos que no conces para que decida por ti los próximos 4 años sin tener en cuenta tu opinión ni una sola vez? Absurdo verdad.</h5>
+                  </li>
+                </ul>               
+              </li>
+              <li class="element">
+                <ul>
+                  <li>
+                    <h3 style="color: #0084B4; font-weight: lighter;"><i class="fa fa-envelope-o fa-3x" aria-hidden="true" style="font-size: 22px;"></i>&nbsp;&nbsp;Consultas y apoyos</h3>
+                    <h5>¿Quién mejor que nosotros mismos para decidir sobre nuestros propios problemas?</h5>
+                    <h5>Los problemas y debates deben surgir de los propios ciudadanos que filtren los problemas verdaderamente importantes, a mayor afectación de personas mayor relevancia y prioridad.</h5>
+                    <h5>Estas consultas dan lugar a resoluciones, donde se recogen las diferentes opiniones y una votación final para que sea el político responsable quien se haga cargo de la puesta en marcha.</h5>
+                  </li>
+                </ul>               
+              </li>                
+            </ul>
+<%
+=begin%>            
+            <ul class="titulo">
+              <li class="element">
+                <ul>
+                    <li>
+                        <i class="fa fa-arrow-left fa-2x" aria-hidden="true" style="color: blue;"></i>
+                        <i class="fa fa-arrow-right fa-2x" aria-hidden="true"></i>
+                    </li>
+                    <li>
+                        <b>Ideología</b>
+                        <p><h5>En XXX no tenemos ideología, tenemos ideas, y creemos que pensar en izquierdas o derechas, conservadores o demócratas es una visión muy simple de lo que es una persona. Quizá en el pasado los partidos suplieran esa necesidad pero en el momento actual no representan la complejidad de una sociedad ni están preparados para liderar la sociedad del futuro.</h5></p>
+                        <p><h5>Desde Polittizen nos hemos planteado cómo debe ser la sociedad del futuro y en todos los escenarios, las tecnología al servicio de la política es el principal actor. La suma de millones de perfiles políticos crea una representación fiel se la sociedad, con sus problemas y sus soluciones; Ideales de derechas, izquierdas, conservadores, republicanos o demócratas pertenecen a una sociedad antigua que ya no es la nuestra.</h5></p>
+                    </li>
+                </ul>               
+              </li>
+              <li class="element">
+                <ul>
+                  <li>
+                      <i class="fa fa-arrow-left fa-2x" aria-hidden="true" style="color: blue;"></i>
+                      <i class="fa fa-arrow-right fa-2x" aria-hidden="true"></i>
+                  </li>
+                  <li>
+                      <b>Partidos políticos</b>
+                      <p><h5>Adaptar a los partidos y los politicos a la era de las nuevas tecnológías, información, big data y análisis de datos para la toma de decisiones y la evalución de problemas.</h5></p>
+                      <p><h5>Imagínate que nuestros gobernantes no tuvieran partido político. Todo el tiempo que utilizan en batallas con otros partidos políticos, el tiempo que destinan a batallas internas dentro de su propio partido, el que dedican a buscar inversores para su próxima campaña, todos los conflictos de intereses que se mueven dentro de un partido con sus inversores y las decisiones que se toman y que nos afectan a todos justo por todo lo anterior es una de las mayores ineficiencias de nuestra sociedad.</h5></p>
+                      <p><h5>Queremos recuperar todo el tiempo que se pierde, queremos evitar batallas inútiles, queremos evitar intereses ocultos y devolver la eficiencia a nuestro sistema político para que esté preparado para los retos del futuro. Una eficiencia basada en el uso de herramientas de interconexión de personas, recogida y en el análisis de esos datos al servicio de todos.</h5></p>
+                  </li>
+                </ul>               
+              </li>                  
+            </ul>
+            <ul class="titulo">
+              <li class="element">
+                <ul>
+                  <li>
+                      <i class="fa fa-circle-o fa-2x" aria-hidden="true"></i>
+                  </li>
+                  <li>
+                      <b>Círculos</b>
+                      <p><h5>Los círculos son agrupaciones de personas que comparten algún interés común. Los puede haber administrativos, que nos representan a todos según donde vivamos y de los cuales se obtienen los representantes. Los círculos están dedicados a la colaboración de sus integrantes, presentando problemas y debatiendo  consultas.</h5></p>
+                  </li>
+                </ul>   
+              </li>
+              <li class="element">
+                <ul>
+                  <li>
+                      <i class="fa fa-file-text-o fa-2x" aria-hidden="true"></i>
+                  </li>
+                  <li>
+                    <b>Consultas</b>
+                    <p><h5>Uno de los elementos principales para el funcionamiento de la plataforma, son objetos empleados para que expresar opinión y debatir. Si son populares y se votan más de 2/3 partes de los integrantes y resulta favorable se combierten en resoluciones que representan a cada círculo.</h5></p>
+                  </li>
+                </ul>               
+              </li>
+              
+              <li class="element">
+                <ul>
+                  <li>
+                      <i class="fa fa-bolt fa-2x" aria-hidden="true"></i>
+                  </li>
+                  <li>
+                    <b>Acciones</b>
+                    <p>
+                      <h5>
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                        <i class="fa fa-bolt" aria-hidden="true"></i>
+                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        <h5></p>Las acciones son iniciativas orientadas a ejecutarse por los usuarios, desde afrontar un problema común, acciones por el medio ambiente, para con los animales...<p><h5>
+                      </h5>
+                    </p>
+                  </li>
+                </ul>               
+              </li>
+              <li class="element">
+                <ul>
+                  <li>
+                      <i class="fa fa-heart-o fa-2x" aria-hidden="true"></i>
+                  </li>
+                  <li>
+                    <b>Causas</b>
+                    <p>
+                      <h5>
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                        <i class="fa fa-bolt" aria-hidden="true"></i>
+                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        <h5></p>Las causas defienden unos ideas con las sentirte identificad. Cada persona se representada por múltiples causas o ideas que en su conjunto, junto con las acciones y los cículos conforman una identidad compleja pero individualizada que seguramente no encajaría en ningún partido político actual.<p><h5>
+                      </h5>
+                    </p>
+                  </li>
+                </ul>               
+              </li>    
+            </ul>
+<%
+=end%>          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

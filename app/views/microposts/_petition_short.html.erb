@@ -1,0 +1,75 @@
+<div class="aside_content">
+  <ul class="principal" style="border: 1px solid #f7f8f9;">
+    <li class="titulo" style="display: inline-flex;">
+      <h3 style="margin: 0px"><b>Consultas ciudadanas más destacadas:</b></h3>
+    </li>
+
+    <% if @petitions_masvotadas != nil %>
+      <% @petitions_masvotadas.last(100).take(10).each do |petitions_masvotadas| %>
+        <% @petition = Micropost.where(id: petitions_masvotadas) %>
+        <% @petition.each do |popular_petition| %>
+          <% if Vote.where(user_id: current_user).where(micropost_id: popular_petition).any? %>
+          <% else %>
+            <% if popular_petition.title? %>
+              <li class="lista_block">
+                <ul class="inline" style="width: 100%;">
+                  <li class="inline" style="align-items: center;">
+                      <%= image_tag popular_petition.picture.url, class: "img-circle", size: 50 if popular_petition.picture? %>
+                  </li>
+                  <li class="inline" style="width: 100%;">
+                    <span class="nombres" style="color:#0084B4;"><h5 style="font-size: 14px; margin: 0px;font-weight: bold; line-height: 18px;"><%= link_to popular_petition.title, micropost_path(id: popular_petition), style: "color: #1DA1F2;" %></h5></span>
+                  </li>
+                  <li class="right" style="padding-top: 10px;">
+                    <% @votosPositivos = popular_petition.votes.where(:like => 1).count %>
+                    <% @votosNegativos = popular_petition.votes.where(:dislike => 1).count %>
+                    <% @votosTotales = @votosPositivos + @votosNegativos %>
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                    <% if @votosTotales != 0 %>
+                      <% @porcentaje = (@votosPositivos * 100 / (@votosPositivos + @votosNegativos)) %>
+                      <%= @porcentaje %> %
+                    <% else %>
+                      <% @porcentaje = 0 %>
+                      <%= @porcentaje %>% 
+                    <% end %>
+                  </li>
+                </ul>
+              </li>
+            <% end %>
+          <% end %>
+
+          <% if current_page?('/') %>
+          <% else %>
+            <% if logged_in? %>
+              <% if popular_petition.title? %>
+                <li class="lista_block">
+                  <ul class="inline" style="width: 100%;">
+                    <li class="inline" style="align-items: center;">
+                        <%= image_tag popular_petition.picture.url, class: "img-circle", size: 50 if popular_petition.picture? %>
+                    </li>
+                    <li class="inline" style="width: 100%;">
+                      <span class="nombres" style="color:#0084B4;"><h5 style="font-size: 14px; margin: 0px; font-weight: bold; line-height: 18px;"><%= link_to popular_petition.title, micropost_path(id: popular_petition), style: "color: #1DA1F2;" %></h5></span>
+                    </li>
+                    <li class="right" style="padding-top: 10px;">
+                      <% @votosPositivos = popular_petition.votes.where(:like => 1).count %>
+                      <% @votosNegativos = popular_petition.votes.where(:dislike => 1).count %>
+                      <% @votosTotales = @votosPositivos + @votosNegativos %>
+                      <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                      <% if @votosTotales != 0 %>
+                        <% @porcentaje = (@votosPositivos * 100 / (@votosPositivos + @votosNegativos)) %>
+                        <%= @porcentaje %> %
+                      <% else %>
+                        <% @porcentaje = 0 %>
+                        <%= @porcentaje %>% 
+                      <% end %>
+                    </li>
+                  </ul>
+                </li>
+              <% end %>
+            <% end %>            
+          <% end %> 
+        <% end %>
+      <% end %>
+    <% end %>
+
+  </ul>
+</div>

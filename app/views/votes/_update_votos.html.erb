@@ -1,0 +1,39 @@
+<% @votosPositivos = @micropost.votes.where(:like => 1).count %>
+<% @votosPositivos = @micropost.votes.where(:dislike => 1).count %>
+<% @voto_usuario = Vote.where(user_id: current_user.id, micropost_id: @micropost.id) %>
+
+<!-- Votos positivos ya una vez creados -->
+		<ul class="social_elements">
+			<li style="display: inline-flex; margin: 0px; padding-top: 10px;">
+        <% @voto_usuario.each do |voto_usuario| %>
+          <%= form_tag(update_like_micropost_vote_path(micropost_id: @micropost, id: voto_usuario), method: :put, remote: true) do |f| %>
+              
+
+              <% if @micropost.petition.present? %>
+                <%= button_tag(class: "btn btn-link btn-sm", style: "color: #595959; padding: 0px;") do %><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true" style="color: #595959;"></i>  <%= @votosPositivos = @micropost.votes.where(:like => 1).count %></span>&nbsp;&nbsp;&nbsp;Apoyar
+                <% end %>                 
+              <% else %>
+                <%= button_tag(class: "btn btn-link btn-sm", style: "color: #595959; padding: 0px;") do %><span class="glyphicon glyphicon-arrow-up" style="color: #595959;"></span>  <% @votosPositivos = @micropost.votes.where(:like => 1).count %><% @votosNegativos = @micropost.votes.where(:dislike => 1).count %></span>&nbsp;&nbsp;&nbsp;<%= @conteoVotos = @votosPositivos - @votosNegativos %>&nbsp;&nbsp;&nbsp;
+                <% end %> 
+              <% end %>
+
+          <% end %>
+        <% end %>
+
+<!-- Votos Negativos ya una vez creados -->
+				<% @voto_usuario.each do |voto_usuario| %>
+	        <%= form_tag(update_dislike_micropost_vote_path(micropost_id: @micropost, id: voto_usuario), method: :put, remote: true) do |f| %>
+
+                <% if @micropost.petition.present? %>
+                  <%= button_tag(class: "btn btn-link btn-sm", style: "color: #595959; padding: 0px;") do %>
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-thumbs-o-down fa-lg" aria-hidden="true" style="color: #595959;"></i> <%= @votosNegativos = @micropost.votes.where(:dislike => 1).count %>&nbsp;&nbsp;&nbsp;            
+                  <% end %>            
+                <% else %>
+                  <%= button_tag(class: "btn btn-link btn-sm", style: "color: #595959; padding: 0px;") do %><span class="glyphicon glyphicon-arrow-down" style="color: #595959;"></span> 
+                  <% end %>
+                <% end %>
+
+	        <% end %>
+	      <% end %>
+	    </li>
+	  </ul>

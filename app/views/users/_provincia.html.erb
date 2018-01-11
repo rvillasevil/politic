@@ -1,0 +1,10 @@
+<div id="formulario">
+	<%= form_tag(update_administrative_ciudad_user_path(current_user), remote: true, method: :put) do |f| %>
+	    <%# render 'shared/error_messages', object: f.object %>
+	    <%# @autonomia = Comunidad.where(comunidad: current_user.autonomia).first %>
+			<%# @provincias = Provincia.where(comunidad_id: @autonomia.id) %>
+	  	
+	    <%= select_tag(:provincia, options_for_select(Provincia.all.collect {|p| [ p.provincia ]} )) %>
+	    <%= submit_tag "Save changes", class: "btn btn-primary" %>
+	<% end %>
+</div>

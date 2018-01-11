@@ -1,0 +1,15 @@
+<div id="formulario">
+	<%= form_tag(update_circles_administrative_user_path(current_user), method: :put) do |f| %>
+	    <%# render 'shared/error_messages', object: f.object %>
+
+	    <% @provincia = Provincia.where(provincia: current_user.provincia).first %>
+			<% @municipios = Municipio.where(id_provincia: @provincia.id_provincia) %>
+
+	    <%= select_tag(:ciudad, options_for_select(@municipios.collect {|p| [ p.nombre ]} )) %>
+	    <%= submit_tag "Save changes", class: "btn btn-primary" %>
+	<% end %>
+</div>
+
+
+
+

@@ -1,0 +1,180 @@
+<div class="container" style="background-color: white;">
+    <div class="row">
+        <div class="edit_user">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="new_inicio" >
+                <h1 style=" text-align: left; padding-left: 0px; font-weight: bolder;">Vamos a crear tu cuenta</h1>                   
+                  <% provide(:title, 'Sign up') %>
+                  <h3 style="margin-top: 25px; text-align: left; font-weight: normal;">Resgistrarse en assemblyn es fácil y gratis; además tú eliges el momento de ser representante de algún círculo administrativo.</h3>
+                    <ul class="titulo">
+                      <li class="element" style="align-items: center;">
+                        <ul style="padding-top: 20px;">
+                            <li>
+                                <i class="fa fa-id-badge fa-2x" aria-hidden="true" style="color: #0084B4;"></i>
+                            </li>
+                            <li>
+                                <h3 style="text-align: center; color: #0084B4;">Sólo lo justo</h3>
+                                <p><h5 style="text-align: center;">Con muy pocos datos podrás crear tu cuenta en XXX</h5></p>
+                            </li>
+                        </ul>   
+                      </li>
+                      <li class="element" style="text-align: center;">
+                        <ul style="padding-top: 20px;">
+                            <li>
+                                <i class="fa fa-envelope-open-o fa-2x" aria-hidden="true" style="color: #0084B4;"></i>
+                            </li>
+                            <li>
+                                <h3 style="text-align: center; color: #0084B4;">Círculos administrativos</h3>
+                                <p><h5 style="text-align: center;">Para poder ser candidato son necesarios especificar los círculos administativos a los que perteneces, pero no es necesario que nos los indiques ahora.</h5></p>
+                            </li>
+                        </ul>               
+                      </li>
+                      <li class="element" style="text-align: center;">
+                        <ul style="padding-top: 20px;">
+                            <li>
+                                <i class="fa fa-users fa-2x" aria-hidden="true" style="color: #0084B4;"></i>
+                            </li>
+                            <li>
+                                <h3 style="text-align: center; color: #0084B4;">Amigos</h3>
+                                <p><h5 style="text-align: center;">Para poder tener mayor representación invita a tus amigos a entrar en XXX, cuantos más seamos mejor!</h5></p>
+                            </li>
+                        </ul>               
+                      </li>
+                    </ul>
+                    * Debes tener más de 18 años para poder participar en la comunidad.
+                    <ul class="form" style="padding: 30px 0px;">
+                        <%= form_for(@user) do |f| %>
+                        <h5>
+                            <li>
+                                <%= render 'shared/error_messages', object: f.object %>
+                                <%= f.label :name, "Tu nombre", style: "" %>
+                                <span style="font-weight: bolder;"><%= f.text_field :name, class: 'form-control', :placeholder => "Tu nombre y apellidos para tu usuario" %></span>
+                            </li>
+                            <li>
+                                <%= f.label :description, style: "" %>
+                                <span style="font-weight: bolder;"><%= f.text_area :description, style: "height: 100px;", class: 'form-control', placeholder: "Descríbete para completar de una forma política, te reto!" %></span>
+                            </li>
+                            <li>
+                                <%= f.label :email, style: "" %>
+                                <span style="font-weight: bolder;"><%= f.email_field :email, class: 'form-control', placeholder: "Te mandaremos el correo de activación a la cuenta de correo electrónico" %></span>
+                            </li>
+                            <li>
+                                <%= f.label :foto, "Tu foto", style: "" %>
+                                <span style="font-weight: bolder;"><%= f.file_field :foto, accept: 'image/jpeg,image/gif,image/png', placeholder: "Jpeg, gif, png", style: "color: grey;" %></span>
+                            </li>
+                            <li>
+                                <%= f.label :password, style: "" %>
+                                <span style="font-weight: bolder;"><%= f.password_field :password, class: 'form-control' %></span>
+                            </li>
+                            <li>
+                                <%= f.label :password_confirmation, "Confirmation", style: "" %>
+                                <%= f.password_field :password_confirmation, class: 'form-control' %>
+                                <%= f.hidden_field :plaza, :value => false %>
+                                <%= f.hidden_field :activated, :value => true %>
+                            </li>
+                            <li style="padding-top: 20px;"> 
+                                <%= f.submit "Crea mi cuenta", class: "btn btn-primary", style: " background-color: white; color: grey; border: 1px solid grey; font-weight: bolder;" %>
+                            </li>
+                        </h5>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>            
+
+            <%# f.label "Selecciona tu círculo autonómico para poder ser candidato y estar actualizado" %>
+            <%# f.select :autonomia, [
+                'Andalucía',
+                'Aragón',
+                'Principado de Asturias',
+                'Islas Baleares',
+                'Canarias',
+                'Cantabria',
+                'Castilla-La Mancha',
+                'Castilla y León',
+                'Cataluña',
+                'Comunidad Valenciana',
+                'Extremadura',
+                'Galicia',
+                'La Rioja',
+                'Comunidad de Madrid',
+                'Región de Murcia',
+                'Comunidad Foral de Navarra',
+                'País Vasco'
+                ] %>
+
+
+            <%# f.label "Selecciona tu círculo provincial para poder ser candidato" %>
+            <%# f.collection_select :provincia, Provincia.order(:provincia), :id, :provincia, include_blank: false  %>
+            <%# p @provincia %>
+
+            <%# f.label "Selecciona tu círculo municipal para poder ser candidato" %>
+            <%# f.select(:ciudad, Municipio.all.collect {|p| [ p.nombre ]}, ) %>
+            <%# f.collection_select :ciudad, Municipio.order(:nombre), :id, :nombre, include_blank: false  %>
+            <%# f.select :ciudad, [
+                'Albacete',
+                'Alicante',
+                'Almería',
+                'Álava',
+                'Asturias',
+                'Ávila',
+                'Badajoz',
+                'Illes Balears',
+                'Barcelona',
+                'Bizkaia',
+                'Burgos',
+                'Cáceres',
+                'Cádiz',
+                'Cantabria',
+                'Castellón',
+                'Ciudad Real',
+                'Córdoba',
+                'A Coruña',
+                'Cuenca',
+                'Gipuzkoa',
+                'Girona',
+                'Granada',
+                'Guadalajara',
+                'Huelva',
+                'Huesca',
+                'Jaén',
+                'León',
+                'Lleida',
+                'Lugo',
+                'Madrid',
+                'Málaga',
+                'Murcia',
+                'Navarra',
+                'Ourense',
+                'Palencia',
+                'Las Palmas',
+                'Pontevedra',
+                'La Rioja',
+                'Salamanca',
+                'Santa Cruz de Tenerife',
+                'Segovia',
+                'Sevilla',
+                'Soria',
+                'Tarragona',
+                'Teruel',
+                'Toledo',
+                'Valencia',
+                'Valladolid',
+                'Zamora',
+                'Zaragoza',
+                'Ceuta',
+                'Melilla'] %>
+
+            
+
+            <%# f.label "Selecciona tu círculo profesional para debatir sobre los temas importantes" %>
+            <%# f.text_field :profesion, class: 'form-control' %>
+            
+
+            
+
+            
+
+            

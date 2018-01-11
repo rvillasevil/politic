@@ -1,0 +1,139 @@
+
+<span class="emoticons">
+    <div style="width: 100%; background-color: #f2f4ff; font-size: 12px; border: 1px solid #dddfe2; border-bottom: none;">
+        <ul class="" style="display: inline-flex; list-style: none; text-align: center; width: 70%; padding-left: 0px; padding-top: 5px; margin-bottom: 5px;">
+            <!-- <li style="width: 25%; background-color: #c2d7f9; padding: 10px;";"><i class="fa fa-paper-plane-o fa-lg" aria-hidden="true"></i><span> Posts</span></li> --> 
+            <li style="width: 40%; border-right: 1px solid #d9d9d9;" onclick="divVisibility('Div1');"><i class="fa fa-newspaper-o fa-lg" aria-hidden="true" style="color: #0084B4;"></i><span> Add a Link</span></li>  
+            <li style="width: 30%; border-right: 1px solid #d9d9d9;" onclick="divVisibility('Div2');"><i class="fa fa-youtube fa-lg" aria-hidden="true" style="color: red;"></i><span> Video</span></li>
+            <li style="width: 30%;" onclick="divVisibility('Div3');"><i class="fa fa-picture-o fa-lg" aria-hidden="true" style="color: green;"></i><span> Imagen</span></li>
+        </ul>        
+    </div>
+
+</span>
+
+<!-------------------------------------------------------- -->
+<!-- Formulario del micropost -->
+<%= form_for(@micropost, html: { multipart: true }) do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+        <div class="share-content" style="background-color: white; margin-bottom: 10px; border: 1px solid #dddfe2;">
+            <ul style="list-style-type: none; -webkit-padding-start: 5px; margin: 0px; border-bottom: 1px solid #f2f2f2;">
+                <li style="display: inline-flex; margin-top: 10px;">
+                    <%= image_tag (current_user.foto.url), class: "img-circle", size: 25 if current_user.foto? %>
+                </li>
+                <li style="display: inline-flex; width: 90%; margin: 0px;">
+                    <%= f.text_area :content, placeholder: " Share something with the community...", style: "border: none;" %>
+                </li>
+
+            </ul>
+            <ul style="display: inline-flex; list-style-type: none; width: 100%; margin: 0px; padding-left: 0px;">
+                    <li style="padding-top: 8px; width: 60%; margin-left: 5px; margin-right: 15px; display: inline-flex;">
+                        <i class="fa fa-comments-o" style="font-size: 16px;"></i>&nbsp;
+                        <%= f.text_field :hashtag1, placeholder: " Hashtag...", style: "margin-bottom: 5px; border: none; font-size: 12px;", maxlength: 12 %>
+                    </li>
+                    <li style="width: 30%; padding-top: 5px; font-size: 11px;" >
+                        <%= f.hidden_field :petition, :value => false %>
+                        <%= f.hidden_field :hashtag2, :value => "posts" %>
+                        <%= f.hidden_field :plaza_id, value: @plaza.id %>
+                        <%= f.submit "Post", class: "btn btn-info btn-sm", style: "background-color: #c2d7f9; color: black; border: 0px; margin-bottom: 5px;" %> 
+                    </li>
+                </ul>
+        </div>
+
+    <div id="Div1" style="display: none;">
+        <div class="share-content">
+            <div class="iconos-share">
+                <ul style="display: inline-flex; list-style-type: none; width: 100%; margin-bottom: 3px; padding-left: 5px;">
+                    <li style="width: 100%; display: inline-flex;">
+                        <i class="fa fa-newspaper-o fa-lg" aria-hidden="true" style="padding: 8px;"></i>
+                        <%= f.text_field :link, placeholder: "  Pega el enlace directamente de la barra de direcciones", style: "margin-bottom: 3px;" %>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="Div2" style="display: none; ">
+        <div class="share-content">
+            <div class="iconos-share">
+                <ul style="display: inline-flex; list-style-type: none; width: 100%; margin-bottom: 3px;  padding-left: 5px;">
+         
+                    <li style="width: 100%; display: inline-flex;">
+                        <i class="fa fa-video-camera fa-lg" aria hidden="true" style="padding: 8px;"></i>
+                        <%= f.text_field :video, placeholder: "  O quizá un video. Copia el codigo del video de Youtube", style: "margin-bottom: 3px;" %>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="Div3" style="display: none; "> 
+        <div class="share-content">
+            <div class="iconos-share">
+                <ul style="display: inline-flex; list-style-type: none; width: 100%; margin-bottom: 3px; padding-left: 15px;">
+                    <li style="padding: 0px; width: 100%; margin-left: 10px;">
+                        <div id="test">
+                            <div class="wrapper" style="margin-top: 5px; padding-bottom: 10px; height: 30px;">
+                                <%= f.file_field(:picture, accept: 'image/jpeg,image/gif,image/png',  class: 'file_input') %>
+                            </div>
+                            <button class= "btn btn-default btn-sm"><span class="fa fa-picture-o fa-lg" aria-hidden="true"></span> Image </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+<% end %>
+
+<script>
+ var divs = ["Div1", "Div2", "Div3"];
+    var visibleDivId = null;
+    function divVisibility(divId) {
+      if(visibleDivId === divId) {
+        visibleDivId = null;
+      } else {
+        visibleDivId = divId;
+      }
+      hideNonVisibleDivs();
+    }
+    function hideNonVisibleDivs() {
+      var i, divId, div;
+      for(i = 0; i < divs.length; i++) {
+        divId = divs[i];
+        div = document.getElementById(divId);
+        if(visibleDivId === divId) {
+          div.style.display = "block";
+        } else {
+          div.style.display = "none";
+        }
+      }
+    }
+</script>
+
+<script type="text/javascript">
+  $('#micropost_picture').bind('change', function() {
+    var size_in_megabytes = this.files[0].size/1024/1024;
+    if (size_in_megabytes > 2) {
+      alert('Maximum file size is 2MB. Please choose a smaller file.');
+    }
+  });
+</script>
+
+<!-- fin del formulario del post -->
+
+<!-- fin colapsable -->
+
+
+
+
+
+
+
+
+
+
+
+
+

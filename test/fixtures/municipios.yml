@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  provincia_id: 1
+  municipio_id: 1
+  codmunicipio: 1
+  nombre: MyString
+
+two:
+  provincia_id: 1
+  municipio_id: 1
+  codmunicipio: 1
+  nombre: MyString

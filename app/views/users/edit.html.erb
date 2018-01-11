@@ -1,0 +1,75 @@
+<div class="container" style="background-color: white;">
+  <% provide(:title, "Edit user") %>
+    <div class="edit_user">
+      <h1 style="font-family: 'Open Sans'; text-align: left; font-weight: bolder;">Update your profile</h1>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3" style="padding: 30px 15px;">
+          <%= form_for(@user)  do |f| %>
+            <%= render 'shared/error_messages', object: f.object %>
+
+            <h5 style="font-weight: bolder;"><%= f.label :name, style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.text_field :name, class: 'form-control' %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label :description, style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.text_area :description, class: 'form-control', style: "height: 100px; ", maxlength: 300 %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label :email, style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.email_field :email, class: 'form-control' %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label :pais, style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #555555;"><%= f.select(:pais, Pai.all.collect {|p| [ p.paisnombre ]} ) %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label "Selecciona tu círculo profesional para debatir sobre los temas importantes", style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.text_field :profesion, class: 'form-control' %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label "", "Your picture", style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder;"><%= f.file_field :foto, accept: 'image/jpeg,image/gif,image/png', style: "color: #555555;" %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label "Add your linkedIN profile, just copy your link.", style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.text_field :linkedin, class: 'form-control' %></h5>
+
+            <div>
+                <ul style="list-style: none; padding: 0px;">
+                    <li>
+                        <h5 style="font-weight: bolder;"><%= f.label "Tús lobbys administrativos", style: "color: #0084B4;" %></h5>
+                    </li>
+                    <li>
+                        <h5 style="">Círculo municipal:
+                        <span style="font-weight: bolder;"><%= current_user.ciudad %></span></h5>                   
+                    </li>
+                    <li>
+                        <h5 style="">Círculo provincial:
+                        <span style="font-weight: bolder;"><%= current_user.provincia %></span></h5>
+                    </li>
+                    <li>
+                        <h5 style="">Círculo autonómico:
+                        <span style="font-weight: bolder;"><%= current_user.autonomia %></span></h5>
+                    </li>
+                    <li style="padding-top: 20px;">
+                        <%= link_to "Cambia tus círculos administrativos", edit_administrative_user_path( current_user), class: "btn btn-primary", style: "background-color: white; color: #0084B4; border: 1px line #0084B4;" %>
+                    </li>
+                </ul>        
+            </div>
+
+            <h5 style="font-weight: bolder;"><%= f.label :candidate, style: "color: #0084B4;" %></h5>
+            <div style="width: 100%; display: block; align-items: right; .input { width: auto; }">
+                <%= f.radio_button :candidate, true, style: "width: auto;"  %> Quiero ser candidato
+                &nbsp;&nbsp;|&nbsp;&nbsp;<%= f.radio_button :candidate, false, style: "width: auto;"  %> De momento no              
+            </div>
+
+
+
+            <h5 style="font-weight: bolder;"><%= f.label :password, style: "color: #0084B4;" %>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.password_field :password, class: 'form-control' %></h5>
+
+            <h5 style="font-weight: bolder;"><%= f.label :password_confirmation, "Confirmation", style: "color: #0084B4;" %></h5>
+            <h5 style="font-weight: bolder; color: #d9d9d9;"><%= f.password_field :password_confirmation, class: 'form-control' %></h5>
+
+            <%= f.submit "Save changes", class: "btn btn-primary" %>
+
+          <% end %>
+        </div>
+      </div>        
+    </div>
+
+</div>

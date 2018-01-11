@@ -1,0 +1,43 @@
+<div>
+	<% if logged_in? %>
+	 <div class="usuarios_sugeridos" style="border: 1px solid #dddfe2; padding: 10px;">
+	  <h3 style="margin: 0px;"><b><%= current_user.name %> hecha un vistazo a los siguientes lobbies:</b></h3>
+	 </div>
+	<% @usuarios = User.all %>
+	<% if current_user.following(@usuario) %>
+		<ul class="circulos_sugeridos">
+			<% @usuarios.first(5).each do |user| %>
+				<% @siguiendo_plaza = Group.where(user_id: user) %>
+				<% @siguiendo_plaza.each do |siguiendo_plaza| %>
+					<% @plazas_seguidas = Plaza.where(id: siguiendo_plaza.plaza_id) %>
+					<% @plazas_seguidas = @plazas_seguidas.distinct %>
+					<% @plazas_seguidas.each do |plaza_seguida| %>
+						<% if plaza_seguida.administrative != true %>
+							<% @grupos_seguidos_usuario = Group.where(user_id: current_user) %>
+							<li style="display: block; border-bottom: 1px solid #e6e9ec;">
+								<ul style="display: inline-flex; font-size: 13px;">
+									<li class="imagen">
+										<%= image_tag plaza_seguida.foto.url, class: "img-circle", size: 45 if plaza_seguida.foto? %>
+									</li>
+									<li class="texto">
+										<% if plaza_seguida.action != true %>
+            					<% if plaza_seguida.causa != true %>
+                  			<i class="fa fa-circle-o" aria-hidden="true"></i>
+                				<% else %>
+                				<i class="fa fa-circle-o" aria-hidden="true"></i>
+                				<% end %>
+              			<% else %>		
+                			<i class="fa fa-circle-o" aria-hidden="true"></i>
+              			<% end %>
+										&nbsp;<b><h3 style="margin: 0px; padding: 5px;  font-size: 15px;"><%= link_to plaza_seguida.name, user_plaza_path(id: plaza_seguida, user_id: current_user), style: "color: #1DA1F2;" %></b></h3>	
+									</li>
+								</ul>
+							</li>
+						<% end %>
+					<% end %>
+				<% end %>
+			<% end %>
+		<% end %>
+	</ul>
+	<% end %>
+</div>

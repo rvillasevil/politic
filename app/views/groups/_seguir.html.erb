@@ -1,0 +1,11 @@
+<%= form_for(@group, url: '/seguir', method: :post, remote: true) do |f| %>
+	<%= f.hidden_field :user_id, :value => current_user.id %>
+	<%= f.hidden_field :plaza_id, :value => params[:id] %>
+
+<%= f.submit "Unite al lobby", class: "btn btn-primary" %>
+<% end %>
+
+<%# link_to("Seguir", '/seguir', method: :post, user_id: current_user.id) do |f| %>
+	<%# f.hidden_field :user_id => current_user.id %>
+<%# end %>
+

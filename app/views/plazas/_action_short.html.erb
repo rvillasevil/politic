@@ -1,0 +1,53 @@
+<div class="aside_content" style="margin-top: 15px;">
+  <ul class="principal">
+    <li class="titulo">
+      <% @usuario = params[:id] %>
+      <% if @usuario != nil %>
+        <ul style="padding: 0px; display: inline-flex;">
+          <li style="border: 0px; display: inline-flex;">
+            <i class="fa fa-bolt fa-lg" aria-hidden="true"></i>
+            &nbsp;<h3 style="font-size: 16px; margin: 0px;"><b>Iniciativas</b></h3>
+          </li>
+          <li style="position: absolute; right: 30px; border: 0px;">
+            <%= link_to "Ver todos", user_plazas_path(user_id: params[:id], accion: true) %>
+          </li>
+        </ul>
+      <% else %>
+        <ul style="padding: 0px; display: inline-flex;">
+          <li style="border: 0px; display: inline-flex;">
+            <i class="fa fa-bolt fa-lg" aria-hidden="true"></i>
+            &nbsp;<h3 style="font-size: 16px; margin: 0px;"><b>Iniciativas</b></h3>
+          </li>
+          <li style="position: absolute; right: 30px; border: 0px;">
+            <%= link_to "Ver todos", user_plazas_path(user_id: current_user, accion: true) %>
+          </li>
+        </ul>
+      <% end %>
+    </li>
+    <% if @grupos_acciones != nil %>
+      <% @grupos_acciones.each do |grupos_acciones| %>
+        <% @plazas_acciones = Plaza.where(id: grupos_acciones.plaza_id) %>
+        <% @actions = @plazas_acciones.where(action: true) %>
+        <% @causas = @plazas_acciones.where(causa: true) %>
+
+          <% @actions.take(5).each do |action| if @actions.any? %>
+            <li class="lista_block">
+              <ul class="inline">
+                <li class="inline" style="align-items: center;">
+                    <%= image_tag action.foto.url, size: 50, class: "img-circle" if action.foto? %>
+                </li>
+                <li style="padding-left: 10px; width: 78%;">
+                  <b><%= link_to action.name, user_plaza_path(user_id: current_user, id: action) %></b>
+                  <% @numero_seguidores = Group.where(plaza_id: action) %>
+                  <span style="position: absolute; right: 25px;"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;<%= @numero_seguidores.count if @numero_seguidores.any? %></span>
+                  <span style="display: inline-block;"><%= truncate(action.description, length: 100) %></span>
+                </li>       
+              </ul>
+            </li>
+          <% end %>
+          <% end %>
+
+      <% end %>
+    <% end %>
+  </ul>
+</div>

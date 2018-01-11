@@ -1,0 +1,25 @@
+<div class="container">
+  <% provide(:title, 'Circles') %>
+  <div class="row">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <%= image_tag @user.foto.url, size: 150 if current_user.foto? %>
+        <h1><%= @user.name %></h1>
+        <span><%= link_to "view my profile", @user %></span>
+        <span><b>Microposts:</b> <%= @user.microposts.count %></span>
+      </section>
+      <section class="stats">
+        <%= render 'shared/stats' %>
+        <% if @users.any? %>
+          <div class="user_avatars">
+            <% @users.each do |user| %>
+              <%= image_tag user.foto.url, size: 50 if user.foto? %>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+    </aside>
+    <div class="col-md-8">
+    </div>
+  </div>
+</div>

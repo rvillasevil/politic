@@ -1,0 +1,12 @@
+<h1>Polittizen</h1>
+
+<p>Hi <%= @user.name %>,</p>
+
+<h3 style="font-weight: bolder;">
+<i class="fa fa-university" aria-hidden="true"></i>
+Welcome to the polittizen, Click on the link below to activate your account:
+</h3>
+<h5 style="margin-top: 10px;">Bienvenido a polittizen, Click en el link para activa tu cuenta.</h5>
+
+<%= link_to "Activate", edit_account_activation_url(@user.activation_token,
+                                                    email: @user.email) %>

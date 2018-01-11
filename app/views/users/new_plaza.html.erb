@@ -1,0 +1,82 @@
+<div class="container">
+  <% provide(:title, 'New Plaza') %>
+  <h1>New plaza</h1>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <%= form_for(@plaza) do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
+        <%= f.label :name %>
+        <%= f.text_field :name, class: 'form-control' %>
+
+        <%= f.label :ciudad %> Administrative?
+        <%= f.select :ciudad, [
+            'Albacete',
+            'Alicante',
+            'Almería',
+            'Álava',
+            'Asturias',
+            'Ávila',
+            'Badajoz',
+            'Illes Balears',
+            'Barcelona',
+            'Bizkaia',
+            'Burgos',
+            'Cáceres',
+            'Cádiz',
+            'Cantabria',
+            'Castellón',
+            'Ciudad Real',
+            'Córdoba',
+            'A Coruña',
+            'Cuenca',
+            'Gipuzkoa',
+            'Girona',
+            'Granada',
+            'Guadalajara',
+            'Huelva',
+            'Huesca',
+            'Jaén',
+            'León',
+            'Lleida',
+            'Lugo',
+            'Madrid',
+            'Málaga',
+            'Murcia',
+            'Navarra',
+            'Ourense',
+            'Palencia',
+            'Las Palmas',
+            'Pontevedra',
+            'La Rioja',
+            'Salamanca',
+            'Santa Cruz de Tenerife',
+            'Segovia',
+            'Sevilla',
+            'Soria',
+            'Tarragona',
+            'Teruel',
+            'Toledo',
+            'Valencia',
+            'Valladolid',
+            'Zamora',
+            'Zaragoza',
+            'Ceuta',
+            'Melilla'] %>
+
+
+        <%= f.label :foto, "Tu foto" %>
+        <%= f.file_field :foto, accept: 'image/jpeg,image/gif,image/png' %>
+
+
+        <%= f.hidden_field :plaza, :value => true %>
+        <%= f.hidden_field :created_by, :value => current_user.id %>
+        <%# f.hidden_field :email, :value => "#{SecureRandom.hex(10)}@email.com" %>
+        <%# f.hidden_field :password, :value => "#{SecureRandom.hex(10)}" %>
+        <%= f.hidden_field :activated, :value => true %>
+
+        <%= f.submit "Create Plaza", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+</div>

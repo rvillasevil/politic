@@ -1,0 +1,2 @@
+class Comunidad < ApplicationRecord
+end

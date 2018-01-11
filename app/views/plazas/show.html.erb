@@ -1,0 +1,264 @@
+<div class="container">
+  <% provide(:title, @plaza.name) %>
+  <div class="row">
+    <div class="col-sm-2">
+      <!-- <div class="affix" style="width: 14%; max-width: 190px;"> -->
+        <div class="plaza_stats">
+          <div>
+            <div class="background_img"></div>
+            <ul class="plaza_name_img">
+              <li>
+                <ul>
+                  <li>
+                    <div class="plaza_img">
+                      <%= image_tag @plaza.foto.url, class: "img-circle", size: 100  if @plaza.foto? %> 
+                    </div>
+                  </li>
+                  <li class="texto">
+                    <ul style="list-style: none; padding: 0px;">
+                      <li>
+                        <div class="plaza_name">
+                          <h3 style="margin: 0px; font-weight: bolder; font-size: 22px;"><%= @plaza.name %></h3>
+                        </div>
+                      </li>
+                      <% if @plaza.description? %>
+                      <li class="description">
+                        <%= @plaza.description %>
+                      </li>
+                      <% end %>                
+                    </ul>
+                  </li>                  
+                </ul>
+              </li>
+              <li style="padding-top: 20px;">
+                <%= render 'groups/seguir_form' if logged_in? %>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="aside_content">
+          <ul class="inline" style="margin-bottom: 0px;">
+            <li class="titulo" style="align-items: center;"> 
+              <% if @grupo_seguidores.where(user_id: current_user).any? %>              
+                <%= link_to "Nueva consulta", petition_path(plaza: params[:id]), class: "btn btn-primary btn-sm" %>
+              <% else %>
+                Es necesario pertencer al cículo para realizar consultas en él, por favor, síguelo.
+              <% end %>
+            </li>
+          </ul>
+        </div>      
+        <div class="aside_content">
+          <ul class="principal" style="align-items: center;">
+            <li class="titulo">
+              Comunidad
+            </li>
+            <li style="width: 100%; text-align: center; color: #7e7e81;">
+              <ul style="display: inline-flex; padding: 5px; width: 100%; ">
+                <li style="width: 25%; border: none;">
+                  <i class="fa fa-users" aria-hidden="true"></i>&nbsp;<%= link_to @grupo_seguidores.count, users_path(plaza_id: params[:id]) %>
+                </li>
+                <li style="width: 25%; border: none;">
+                  <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;<%= @peticiones.count %>
+                </li>
+                <li style="width: 25%; border: none;">
+                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                  <% if @microposts.any? %>
+                     <%= @microposts.count %>
+                  <% else %>
+                     0
+                  <% end %>
+                </li>
+                <li style="width: 25%; border: none;">
+                  <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>&nbsp;<%= @votos.count %>                
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      <!-- </div> -->
+    </div>
+
+    <div class="col-sm-4">
+
+      <% if @plaza.administrative == true %>
+        <div class="aside_content">
+          <ul class="principal">
+            <li class="titulo">
+              <h5 style="margin: 0px; font-weight: 700;">Posicion del usuario dentro del círculo</h5>
+            </li>
+            <li class="inline">
+              &nbsp;* No disponible. Es necesario ser afiliado para ser candidato
+            </li>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <ul style="padding: 0px; display: inline-flex; width: 100%;">
+              <li style="border: none; width: 80%;">
+                <h5 style="margin: 0px; font-weight: 700;"><i class="fa fa-file-text-o" aria-hidden="true"></i> Resoluciones (más de 2/3 seguidores)</h5>
+            <% @votos_seguidores.count if @votos_seguidores != nil %>
+              </li>
+              <li style="border: none; margin-right: -5px; text-align: right; width: 20%;">
+                <div style="float: right; display: inline-flex; margin-top: 5px;">
+                  <%= link_to "Ver todas", petitions_public_path(plaza_id: @plaza.id) %>
+                </div>                
+              </li>
+            </ul>
+            
+
+          </li>
+          <% @peticiones.each do |petition| %>
+            <li class="lista_block">
+              <ul class="inline" style="width: 65%;">
+                <li class="inline">
+                  <%= image_tag petition.picture.url, size: 55 if petition.picture? %>
+                </li>
+                <li class="inline" style="width: 100%;">
+                  <span class="nombres" style="width: 100%;"><h5 style="margin: 0px; line-height: 20px;"><%= link_to petition.title, micropost_path(id: petition), style: "color: #444;" %></h5></span>
+                </li>
+                <li class="right" style="align-items: center;">
+                  <%# porcentaje = porcetaje de votos emitidos por seguidores de la plaza, votos_seguidores / seguidores %>
+                  <% @votos_seguidores = Vote.where(micropost_id: petition) %>
+                  <% if @votos_seguidores.any? %>
+                    <% @votos_seguidores.count %>
+                    <% @votos_seguidores_positivos = @votos_seguidores.where(like: 1) %>
+                    <% @votos_seguidores_positivos_porcentaje = @votos_seguidores_positivos.count * 100 / (@votos_seguidores.count) %>
+                    <% if @votos_seguidores.any? %>
+                      <% @porcentaje = (@votos_seguidores.count*100 / (@grupo_seguidores.count)) %>
+                    <% else %>
+                      <% @porcentaje = 0 %>
+                    <% end %>
+
+                    <% @valor_limite = 67 %>
+                    <% @votos = Vote.where(:micropost_id => petition) %>
+                    <% @votos = @votos.count %>
+                    <% @grupo_seguidores.count %> 
+                    <% @votos_seguidores.count %> 
+                    <% @votos_seguidores_positivos.count %> 
+                    <% @votos_seguidores_positivos_porcentaje %>
+                    <% @porcentaje %>
+                    <% (1*100/(2)) %> 
+                 
+                    <% if @porcentaje >= @valor_limite %>
+                      <% if @votos_seguidores_positivos_porcentaje > 1/(2)*100 %>
+                        <button type="button" class="btn btn-success" style="margin: 0px; font-size: 12px;">Aprobada <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+                      <% else %>
+                        <button type="button" class="btn btn-danger" style="margin: 0px; font-size: 12px;">Denegada <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+                      <% end %>
+                    <% else %>
+                      &nbsp;<button type="button" class="btn btn-danger" style="background-color: white; border: 1px solid red; color: red; margin: 0px; font-size: 12px;">In progress <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+                    <% end %>
+                  <% else %>
+                    0 votos
+                  <% end %>
+
+                </li>
+              </ul>
+            </li>
+          <% end %>
+
+        </ul>
+      </div>
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <h5 style="margin: 0px; font-weight: 700;"><i class="fa fa-file-text-o" aria-hidden="true"></i> Iniciativas/Propuestas/Votaciones</h5>
+          </li>
+          <% if @peticiones.any? %>
+          <% @peticiones.each do |petition| %>
+          <li class="lista_block">
+            <ul class="inline" style="width: 80%;">
+              <li class="inline">
+                <%= image_tag petition.picture.url, size: 50 if petition.picture? %>
+              </li>
+              <li class="inline" style="width: 100%;">
+                  <span class="nombres" style="width: 100%;"><h5 style="margin: 0px; line-height: 20px;"><%= link_to petition.title, micropost_path(id: petition), style: "color: #444;" %></h5></span>
+              </li>
+              <li class="right" style="padding-top: 10px;">
+                <% @votos = Vote.where(:micropost_id => petition) %>
+                <% @votos_realizados = @votos.count %>
+                <% if @votos_realizados != 0 %>
+                <% @votos_positivos = @votos.where(:like => true).count %>
+                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> (<%= @votos_positivos*100/(@votos_realizados) %> %)
+                <% else %>
+                  0 votos
+                <% end %>
+              </li>
+            </ul>
+            <% end %>
+          <% else %>
+          <div style="padding: 5px;">
+            <% if @grupo_seguidores.where(user_id: current_user).any? %>              
+              <%= link_to "Nueva consulta", petition_path(plaza: params[:id]), class: "btn btn-primary btn-sm" %>
+            <% else %>
+              Aún no hay consultas, pero es necesario pertencer al cículo para poder crearlas, por favor, únete.
+            <% end %>
+          </div>
+
+          <% end %>
+          </li>
+        </ul>
+      </div>
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <h5 style="margin: 0px; font-weight: 700;"><i class="fa fa-users" aria-hidden="true"></i> Otros usuarios</h5>
+          </li> 
+            <%# if @grupo_seguidores != 0 %> 
+            <% @grupo_seguidores.count %>
+            <% @grupo_seguidores.each do |seguidor| %>
+              <% @usuario = User.where(:id => seguidor.user_id) %>
+              <% if @usuario.any? %>
+                <% @usuario.each do |usuario| %>
+                  <% if usuario != current_user %>
+                  <li class="lista_block">
+                    <ul class="inline" style="width: 80%;">
+                      <li class="inline">
+                        <%= image_tag usuario.foto.url, class: "img-rounded", size: 55 if usuario.foto? %>
+                      </li>
+                      <li class="inline" style="width: 100%;">
+                        <span class="nombres" style="width: 100%;"><b><h5 style="margin: 0px; font-weight: 700;"><%= link_to usuario.name, usuario, style: "color: black;" %></b></span>
+                      </li>
+                      <li class="right">
+                        <% if current_user.following?(usuario) %>
+                          <button type="button" class="btn btn-light btn-sm" style="background-color: white;">Siguiendo</button>
+                        <% else %>
+                          <button type="button" class="btn btn-primary btn-sm" style="border-radius: 15px;"><%= link_to "Apoyar", usuario, {style: "color: white;"} %></button>
+                        <% end %>
+                      </li>
+                    </ul>
+                  <% end %>
+                <% end %>
+              <% else %>
+                No hay usuarios todavia.
+              <% end %>
+            <% end %>
+            <%# end %>  
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-6">
+
+      <h5 style="margin: 0px;"><b>Posts (<%= @microposts.count %>)</b></h5>
+      <div>
+       <%= render 'plazas/plaza_post_form'if logged_in? %>
+      </div>
+
+      <% if @microposts.any? %>
+        <ol class="microposts">
+          <%= render @microposts %>
+        </ol>
+        <%= will_paginate @microposts %>
+      <% else %>
+        El círculo <%= @plaza.name %> no tiene publicaciones. Sé el primero en publicar o mira los siguientes posts realizados en círculos relacionados.  
+      <% end %>
+    </div>
+
+  </div>
+</div>

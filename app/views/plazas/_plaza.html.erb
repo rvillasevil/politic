@@ -1,0 +1,23 @@
+<li style="display: block;">
+<ul style="list-style: none; padding-left: 0px; display: inline-flex; ">
+  <li style="border: 0px; padding: 5px;">
+    <%= image_tag plaza.foto.url, class: "img-circle", size: 50 if plaza.foto? %>
+  </li>
+  <li style="border: 0px; padding: 10px 0px;">
+    <ul style="display: inline-block; list-style: none; padding-left: 5px;">
+      <li style="padding: 0px;">
+        Círculo <b><%= link_to plaza.name, user_plaza_path(id: plaza.id) %></b>
+      </li>
+      <li style="padding: 0px; border: 0px; font-size: 12px;">
+        <%= @seguidores = Group.where(:plaza_id => plaza.id).count %> seguidores
+        <% if logged_in? %>
+          <% if current_user.admin? %>
+          | <%= link_to "delete", plaza, method: :delete,
+                                    data: { confirm: "You sure?" } %>
+          <% end %>
+        <% end %>
+      </li>
+    </ul>   
+  </li>  
+</ul>
+</li>

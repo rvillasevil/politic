@@ -1,0 +1,2 @@
+<%= @votosPositivos = @micropost.votes.where(:like => 1).count %> Up
+<%= @votosPositivos = @micropost.votes.where(:dislike => 1).count %> Down

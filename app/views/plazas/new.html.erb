@@ -1,0 +1,103 @@
+<div class="container" style="background-color: white;">
+  <% provide(:title, 'New Plaza') %>
+  
+  <% @causa = params[:causa] %>
+  <% @action = params[:accion] %>
+  <% @nombre = params[:name] %>
+
+  <% if @causa != "true" %>
+    <% if @action != "true" %>
+      <% if @nombre != nil %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <div class="row">
+    
+    <div class="col-md-6 col-md-offset-3" style="padding: 30px 20px;">
+      <h1 style="font-size: 30px; margin-bottom: 15px; font-weight: bolder;">Crear</h1>
+      <div class="new_inicio">
+        <div class="titulo" style="text-align: left;">
+          <h3 style="margin-top: 0px;">De acuerdo, vamos a crearlo.</h3>
+          <h5 style="margin-top: 25px;">Se convertirá en una forma de relacionarse entre personas.</h5>
+          <h5>
+            Puedes crear un lobby para incluir a personas con algo en común o hacer un llamamiento en favor de una acción común como el medio ambiente.
+          </h5>  
+        </div>
+          <ul class="titulo">
+            <li class="element" style="padding: 10px 5px;">
+              <ul>
+                  <li>
+                      <i class="fa fa-circle-o fa-2x" aria-hidden="true" style="color: #0084B4;"></i>
+                  </li>
+                  <li>
+                      <h3 style="text-align: center; color: #0084B4; margin-top: 10px;">Lobbies</h3>
+                      <p><h5 style="text-align: center;">Compartimos un tema en común.</h5></p>
+                  </li>
+              </ul>   
+            </li>
+            <li class="element" style="padding: 10px 5px;">
+              <ul>
+                  <li>
+                      <i class="fa fa-bolt fa-2x" aria-hidden="true" style="color: #0084B4;"></i>
+                  </li>
+                  <li>
+                      <h3 style="text-align: center; color: #0084B4; margin-top: 10px;">Acciones</h3>
+                      <p><h5 style="text-align: center;">Haz un llamamiento a participar en acciones comunes.</h5></p>
+                  </li>
+              </ul>               
+            </li>
+            <li class="element" style="padding: 10px 5px;">
+              <ul>
+                  <li>
+                      <i class="fa fa-heart-o fa-2x" aria-hidden="true" style="color: #0084B4;"></i>
+                  </li>
+                  <li>
+                      <h3 style="text-align: center; color: #0084B4; margin-top: 10px;">Ideales</h3>
+                      <p><h5 style="text-align: center;">Habla con personas afines a una forma de pensar</h5></p>
+                  </li>
+              </ul>               
+            </li>
+          </ul>
+        </div>
+
+      <%= form_for(@plaza) do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
+        <h5>
+          <% if @causa != "true" %>
+            <% if @action != "true" %>
+              <% if @nombre != nil %>
+                <h3 style="margin: 0px;"><p>Lobby <b><i class="fa fa-circle-o fa-lg" aria-hidden="true" style="color: #0084B4;"></i>&nbsp;<span style="color: #0084B4;"><%= p @nombre  %></span></b></p>
+                <%= f.hidden_field :name, value: [@nombre] %>
+                <%= f.hidden_field :administrative, value: true %>
+              <% else %>
+                <%= f.label :name %> or , <b><%= link_to "crea tu Lobby administrativo", edit_administrative_user_path( current_user) %></b>
+                <%= f.text_field :name, class: 'form-control' %>
+              <% end %>
+            <% else %>
+              <%= f.label "Nombre para tu acción" %>
+              <%= f.text_field :name, class: 'form-control' %>
+              <%= f.hidden_field :action, :value => true %>
+            <% end %>
+          <% else %>
+            <%= f.label "Título para tu causa" %>
+            <%= f.text_field :name, class: 'form-control' %>
+            <%= f.hidden_field :causa, :value => true %>
+          <% end %>
+            </h5>
+
+
+          <%= f.label :description %>
+          <%= f.text_field :description, class: 'form-control' %>
+
+
+          <%= f.label :foto, "Una imagen que lo describa" %>
+          <%= f.file_field :foto, accept: 'image/jpeg,image/gif,image/png' %>
+
+          <%= f.hidden_field :user_id, :value => current_user.id %>
+          <%= f.submit "Crear", class: "btn btn-primary" %>
+        </h5>
+      <% end %>
+    </div>
+  </div>
+</div>

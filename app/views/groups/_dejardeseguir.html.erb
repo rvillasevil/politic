@@ -1,0 +1,21 @@
+<%# @group = current_user.groups.where(:plaza_id => @plaza.id).first %>
+<%# form_for(@group, url: '/dejardeseguir', method: :destroy) do |f| %>
+
+	<%# f.submit "Dejar el lobby" %>
+<%# end %>
+
+
+
+<%# link_to @group.destroy, data: { confirm: "You sure?" } do %>
+	<%# "Dejar el grupo" %>
+<%# end %>
+
+<% @group = Group.where(:plaza_id => params[:id], user_id: current_user) %>
+	<% @group.take(1).each do |group| %>
+		<%= form_for(group, url: '/dejardeseguir', method: :delete, remote: true) do |f| %>
+			<%= f.hidden_field :user_id, :value => current_user.id %>
+			<%= f.hidden_field :plaza_id, :value => params[:id] %>
+			<%= f.hidden_field :id, :value => group.id %>
+			<%= f.submit "Abandonar el lobby", class: "btn btn-light", style: "border: 1px solid #0084B4; background-color: white;"  %>
+		<% end %>
+	<% end %>

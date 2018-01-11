@@ -1,0 +1,148 @@
+<% @posts = Micropost.where(:user_id => current_user.id) %>
+<% @peticiones = Micropost.where(:user_id => current_user.id).where(:petition => true) %>
+<% @peticiones_all = Micropost.where(:petition => true) %>
+<% @plazas_grupos = Group.where(:user_id => current_user.id) %>
+
+<!--<div class="affix" style="width: 14%; max-width: 190px;">-->
+	<section class="plaza_stats" style="margin-top: 0px; border: 1px solid #dddfe2; border-bottom: none;">
+    <div>
+      <div class="background_img"></div>
+      <ul class="plaza_name_img">
+        <li >
+          <div class="plaza_img">
+              <%= image_tag current_user.foto.url, class: "img-circle", size: 100  if current_user.foto? %> 
+          </div>
+        </li>
+        <li style="text-align: center;">
+          <div class="plaza_name">
+            <h3 style="margin: 0px; font-weight: bolder; font-size: 22px;"><%= current_user.name if current_user.name? %></h3>
+          </div>
+        </li>
+        <% if current_user.description? %>
+        <li class="description"  style="text-align: center;">
+          <%= current_user.description %>
+        </li>
+        <% end %>
+      </ul>
+    </div>
+  </section>
+
+<%
+=begin%>
+  <div class="aside_content" style="text-align: center;">
+    <ul class="inline" style="margin-bottom: 0px;">
+      <li class="titulo" >
+        <%= link_to "Nueva consulta", '/petition', class: "btn btn-primary btn-sm", style: "padding: 5px; background-color: white; border: 1px solid #0084B4; color: #0084B4;" %>
+      </li>
+    </ul>
+  </div>
+<%
+=end%>
+
+  <div class="aside_content" style="">
+    <ul class="principal">
+      <li class="titulo" style="padding-bottom: 3px;">
+        Comunidad
+      </li>
+      <li class="lista_block" style="color: #7e7e81;">
+        <ul class="inline" style="width: 100%; text-align: center; ">
+          <li style="width: 75%;">
+            <i class="fa fa-users" aria-hidden="true"></i>
+            &nbsp;<%= link_to current_user.followers.count, users_path(seguidores_id: current_user.id) %><span style="display: block; font-size: 12px;">Afiliados</span> 
+          </li>
+          <li style="width: 75%;">
+            <i class="fa fa-user-o" aria-hidden="true"></i>
+            &nbsp;<%= link_to current_user.following.count, users_path(seguidos_id: current_user.id) %><span style="display: block; font-size: 12px;">Apoya</span>
+          </li>          
+        </ul>
+      </li>
+      <li class="lista_block" style="color: #7e7e81;">
+        <ul class="inline" style="width: 100%; text-align: center;">
+          <li style="width: 32%;">
+            <i class="fa fa-envelope-open-o" aria-hidden="true"></i> <%= @posts.where(:petition => true).count %>
+          </li>
+          <li style="width: 32%;">
+            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+            <%= Vote.where(:micropost_id => @microposts).count %>
+          </li>
+          <li style="width: 32%;">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+            <%= @plazas_grupos.count %>            
+          </li> 
+        </ul>
+      </li>
+    </ul>
+  </div>
+<!--</div>-->
+
+
+
+<%
+=begin%>
+  <div class="aside_content">
+    <ul class="principal">
+      <li class="titulo">
+        Comunidad
+      </li>
+      <li class="lista_block">
+        <ul class="inline">
+          <li>
+            <i class="fa fa-user-o" aria-hidden="true"></i>   Seguidores
+          </li>
+          <li class="right">
+            <a href="<%= followers_user_path(current_user) %>">
+              <%= current_user.followers.count %>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="lista_block">
+        <ul class="inline">
+          <li>
+            <i class="fa fa-user-o" aria-hidden="true"></i>   Seguidos
+          </li>
+          <li class="right">
+            <a href="<%= following_user_path(current_user) %>">
+              <%= current_user.following.count %>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="lista_block">
+        <ul class="inline">
+          <li>
+            <i class="fa fa-envelope-open-o" aria-hidden="true"></i>   Iniciativas
+          </li>
+          <li class="right">
+            <%= @posts.where(:petition => true).count %>
+          </li>
+        </ul>
+      </li>
+      <li class="lista_block">
+        <ul class="inline">
+          <li>
+            <i class="fa fa-hand-o-up" aria-hidden="true"></i>   Votos recibidos totales
+          </li>
+          <li class="right">
+            <%= Vote.where(:micropost_id => @microposts).count %>
+          </li>
+        </ul>
+      </li>
+      <li class="lista_block">
+        <ul class="inline">
+          <li style="width: 90%;">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>   Todos los círculos con los que colabora
+          </li>
+          <li class="right">
+            <%= @plazas_grupos.count %>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+<%
+=end%>
+
+<span class="badge"><%#  pluralize(current_user.microposts.count, "micropost") %></span>
+
+

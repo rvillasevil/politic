@@ -1,0 +1,38 @@
+<div class="container" style="background-color: white;">
+    <% provide(:title, "Tus círculos") %>
+    <div class="edit_user">
+        <h1 style="font-family: 'Open Sans'; text-align: left; font-weight: bolder;">Update your profile</h1>
+        <h1 style="font-size: 18px;">Los círculos donde podrás ser candidato del mejor partido del mundo</h1>
+        <div class="row">
+            <div id="formulario" class="col-md-6 col-md-offset-3" style="padding: 30px 10px;">
+                <%= form_tag(update_administrative_user_path(current_user), remote: true, method: :put) do |f| %>
+                <%# render 'shared/error_messages', object: f.object %>
+
+                    <h5><%= label_tag "Selecciona tu círculo autonómico para poder ser candidato y estar actualizado" %></h5>
+                    <%# select_tag(:autonomia, options_for_select(Comunidad.all.collect {|p| [ p.comunidad ]} )) %>
+                    <%= select_tag(:autonomia, options_for_select([
+                        'Andalucía',
+                        'Aragón',
+                        'Principado de Asturias',
+                        'Islas Baleares',
+                        'Canarias',
+                        'Cantabria',
+                        'Castilla-La Mancha',
+                        'Castilla y León',
+                        'Cataluña',
+                        'Comunidad Valenciana',
+                        'Extremadura',
+                        'Galicia',
+                        'La Rioja',
+                        'Comunidad de Madrid',
+                        'Región de Murcia',
+                        'Comunidad Foral de Navarra',
+                        'País Vasco'
+                        ])) %>
+
+                <%= submit_tag "Save changes", class: "btn btn-primary" %>
+              <% end %>
+            </div>
+        </div>
+    </div>
+</div>

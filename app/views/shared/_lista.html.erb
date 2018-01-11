@@ -1,0 +1,55 @@
+<h5><b><%= current_user.ciudad %></b></h5>
+<div class="candidates_home">
+	<ul>
+		<% if @candidates != nil %>	
+			<% @candidates.take(10).each do |candidate| %>
+				<% @candidate = User.where(:id => candidate.id).where(:ciudad => current_user.ciudad) %>
+				<% @candidate.each do |candidate2| %>
+					<ul style="display: inline-flex;">
+						<li>
+							<%= image_tag candidate2.foto.url, class: "img-circle", size: 40 if candidate2.foto? %>	
+						</li>
+						<ul style="display: inline-block;">
+							<li style="padding-top: 3px; padding-left: 3px; font-size: 12px; margin-bottom: 0px;">
+								<b><%= link_to candidate2.name, candidate2 %></b>
+							</li>
+							<li style="font-size: 11px; margin-top: 0px; padding-left: 3px;">
+								<%= candidate2.followers.count %> seguidores
+							</li>
+						</ul>
+					</ul>
+				<% end %>
+			<% end %>
+		<% end %>
+	</ul>	
+</div>
+
+<h5><b><%= current_user.autonomia %></b></h5>
+<div class="candidates_home">
+	<ul>
+		<% if @candidates != nil %>		
+			<% @candidates.take(10).each do |candidate| %>
+				<% @candidate = User.where(:id => candidate.id).where(:autonomia => current_user.autonomia) %>
+				<% @candidate.each do |candidate2| %>
+					<ul style="display: inline-flex;">
+						<li>
+							<%= image_tag candidate2.foto.url, class: "img-circle", size: 40 if candidate2.foto? %>	
+						</li>
+						<ul style="display: inline-block;">
+							<li style="padding-top: 3px; padding-left: 3px; font-size: 12px; margin-bottom: 0px;">
+								<b><%= link_to candidate2.name, candidate2 %></b>
+							</li>
+							<li style="font-size: 11px; margin-top: 0px; padding-left: 3px;">
+								<%= candidate2.followers.count %> seguidores
+							</li>
+						</ul>
+					</ul>
+				<% end %>
+			<% end %>
+		<% end %> 
+	</ul>	
+</div>
+
+
+
+

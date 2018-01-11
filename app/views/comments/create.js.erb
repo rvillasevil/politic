@@ -1,0 +1,4 @@
+$("#<%= @micropost.id %>").html("<%= escape_javascript(render('comments/comments')) %>");
+$("#consulta-<%= @micropost.id %>").html("<%= escape_javascript(render('comments/comment_show')) %>");
+$("#reply-<%= @micropost.id %>").html("<%= escape_javascript(render('comments/comment_show')) %>");
+

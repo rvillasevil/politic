@@ -1,0 +1,2 @@
+class Pueblo < ApplicationRecord
+end

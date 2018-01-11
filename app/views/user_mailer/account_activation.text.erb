@@ -1,0 +1,6 @@
+Hi <%= @user.name %>,
+
+Welcome to polittizen, Click on the link below to activate your account:
+Bienvenido a polittizen, click en el siguiente link para activar tu cuenta:
+
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>

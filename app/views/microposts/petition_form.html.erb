@@ -1,0 +1,270 @@
+<div class="container">
+<% provide(:title, 'Consultas') %> 
+
+    <% @plaza = params[:plaza] %>
+    <% if @plaza != nil %>
+        <% @nombre_plaza = Plaza.find_by(id: @plaza) %>
+    <% end %>
+
+    <div class="row">
+        <aside class="col-sm-2">
+          <section class="user_info">
+            <%= render 'shared/user_info' %>
+          </section>
+        </aside>
+
+    <div class="col-sm-8">
+        <section class="micropost_form">
+            <div style="padding: 25px 10px;">
+                <% if @plaza != nil %>
+                    <h1 style="font-weight: 700; margin: 0px;">Consulta ciudadana en <%= @nombre_plaza.name %></h1>
+                <% else %>
+                    <h1 style="font-weight: 700; margin: 0px;">Consulta ciudadana.</h1>
+                <% end %>
+                <h3>Las consultas ciudadanos son el medio para relacionarnos de una forma política entre nosotros, nuestras opiniones nos definen, no un partido.</h3>
+            </div>
+ 
+
+            <!-------------------------------------------------------- -->
+            <!-- Formulario del micropost -->
+            <%= form_for(@micropost, html: { multipart: true }) do |f| %>
+                <%= render 'shared/error_messages', object: f.object %>
+                <div class="share-content">
+                    <ul style="list-style-type: none; -webkit-padding-start: 5px; margin: 0px; border-bottom: 1px solid #f2f2f2; padding: 0px;">
+                        <ul style="padding: 0px; display: inline-flex; list-style: none; width: 100%;">
+                            <li style="width: 30%; text-align: center; margin: 10px; background-color: #f2f4ff; padding: 10px; border: 1px solid #dbd9db; border-radius: 10px;" onclick="divVisibility('Div4');">
+                                <i class="fa fa-font" aria-hidden="true"></i>&nbsp;<span>Título</span>
+                            </li>
+                            <li style="width: 30%; text-align: center; margin: 10px; background-color: #f2f4ff; padding: 10px; border: 1px solid #dbd9db; border-radius: 10px;" onclick="divVisibility('Div5');">
+                                <i class="fa fa-align-left" aria-hidden="true"></i>&nbsp;<span>Contenido</span>
+                            </li>
+                            <li style="width: 30%; text-align: center; margin: 10px; background-color: #f2f4ff; padding: 10px; border: 1px solid #dbd9db; border-radius: 10px;" onclick="divVisibility('Div3');">
+                                <i class="fa fa-picture-o" aria-hidden="true"></i>&nbsp;<span>Imagen</span>
+                            </li>                              
+                            <li style="width: 30%; text-align: center; margin: 10px; background-color: #f2f4ff; padding: 10px; border: 1px solid #dbd9db; border-radius: 10px;" onclick="divVisibility('Div6');">
+                                <i class="fa fa-external-link" aria-hidden="true"></i>&nbsp;<span>Adjuntar</span>
+                            </li>
+
+                        </ul>
+
+                        <div id="Div4">
+                            <li style="padding: 10px; padding-bottom: 5px;s">
+                                <h3 style="margin-bottom: 0px;">Empezemos por el título</h3>
+                            </li>
+                            <li style="padding: 10px; padding-top: 0px;">
+                                <span>Describe en una sola frase sobré que quieres saber la opinión de la gente</span>
+                            </li>
+                            <li>
+                                <span style="padding: 10px; width: 85%;">
+                                    <%= f.text_area :title, placeholder: "Título para la consulta...", style: "border: 1px solid #dbd9db; width: 95%;" %>
+                                </span>                                
+                            </li>
+
+                            <li>
+                                <div style="padding: 10px; background-color: #f2f4ff !important; margin: 20px; border: 1px solid #dbd9db; border-radius: 10px;">
+                                    <p>
+                                        <span><b>Que sea corto y conciso</b></span>
+                                    </p>
+                                    <p>
+                                        <span>Ejemplo: "Abrir centro comunitario en el barrio de Salamanca"
+                                        Esto no: "Debido al gran número de personas que se ven obligadas a vivir en la calle..."</span>
+                                    </p>
+                                    <p>
+                                        <b>Céntrate en la problema</b>
+                                    </p>
+                                    <p>
+                                        Ejemplo: "Abrir centro comunitario en el barrio de Salamanca"
+                                        Esto no: "Por la igualdad de derechos entre personas..."
+                                    </p>
+                                    <p>
+                                        <b>Se preciso</b>
+                                    </p>
+                                    <p>
+                                        Ejemplo: "Proteger al lince "
+                                        Ejemplo: "Aprueben el tratamiento que puede salvar la vida de mi hija antes de que sea demasiado tarde"
+                                    </p>
+                                </div>
+                            </li>                                
+                        </div>
+                        <div id="Div5" style="display: none;">
+                            <li style="padding: 10px; padding-bottom: 5px;">
+                                <h3 style="margin-bottom: 0px;">Describe lo máximo posible tu idea.</h3>
+                            </li>
+                            <li style="padding: 10px; padding-top: 0px;">
+                                <span>Recibirás mayor número de apoyos si describres lo más objetivamente el problema.</span>
+                            </li>                            
+
+                            <li>
+                                <span style="padding: 10px; width: 85%;">
+                                    <%= f.text_area :content, placeholder: "Expon tu consulta...", style: "border: 1px solid #dbd9db; width: 95%; height: 150px;" %>
+                                </span>
+                            </li>
+                            <li>
+                                <div style="padding: 10px; background-color: #f6f4f6 !important; margin: 20px; border: 1px solid #dbd9db; border-radius: 10px;">
+                                    <p>
+                                        <b>Desarrolla en un par de líneas el título de la petición.</b>
+                                    </p>
+                                    <p>
+                                        Haz una introducción al escrito desarollando en un párrafo tu idea de consulta.
+                                    </p>
+                                    <p>
+                                        <b>Describe el problema</b>
+                                    </p>
+                                    <p>
+                                        Describe de la forma más sencilla el problema o la idea sobre la que te expresas
+                                    </p>                                    
+                                    <p>
+                                        <b>Cuantifica el problema</b>
+                                    </p>
+                                    <p>
+                                        Para que un ciudadano pueda emitir su opinión sobre algo primero debe estar informado al respecto, por lo que todos los datos que incluyas junto con la descripción del problema mejorará su relevancia.
+                                    </p>
+                                    <p>
+                                        <b>Opina</b>
+                                    </p>
+                                    <p>
+                                        Los lectores quieren saber tu opinión, porqué consideras que se debe apoyar o no apoyar las iniciativas planteadas.
+                                    </p>
+                                    <p>
+                                        <b>Adjunta toda la información que necesites</b>
+                                    </p>
+                                    <p>
+                                        Junto con los datos que expreses en la consulta, añade toda la información que consideres necesaria, links de periodicos, blogs... imágenes describiendo gráficamente el problema o un video.
+                                    </p>
+                                </div>
+                            </li>                                                               
+                        </div>
+
+                        <div id="Div3" style="display: none;">
+                            <li style="padding: 10px; padding-bottom: 5px;">
+                                <h3 style="margin-bottom: 0px;">Asocia una imagen a tu consulta</h3>
+                            </li>
+                            <li style="padding: 10px; padding-top: 0px;">
+                                <span>Una imagen vale más que mil palabras, utilízala para dar una imagen que la represente.</span>
+                            </li>                            
+
+                            <li style="padding: 0px; width: 100%; margin-left: 10px;">
+                                <div id="test">
+                                    <div class="wrapper" style="margin-top: 5px; padding-bottom: 10px; height: 30px;">
+                                        <%= f.file_field(:picture, accept: 'image/jpeg,image/gif,image/png',  class: 'file_input') %>
+                                        <!-- , :required => true -->
+                                    </div>
+                                    <button class= "btn btn-default btn-sm"><span class="fa fa-picture-o fa-lg" aria-hidden="true"></span> Image </button>
+                                </div>
+                            </li>                                                              
+                        </div>
+
+                        <li style="padding: 10px;">
+                            <li style="padding: 10px; padding-bottom: 5px;">
+                                <h3 style="margin-bottom: 0px;">Adjunta un Link o un Video</h3>
+                            </li>
+                            <li style="padding: 10px; padding-top: 0px;">
+                                <span>Adjunta el artículo del periodico, entrada del blog... pega directamente la dirección de la barra de direcciones, o si quieres mandar un video, es muy sencillo, copia simplemente el código del video que aparece en youtube y pégalo.</span>
+                            </li>                                                       
+                        </li>                            
+                        <span class="emoticons">
+                            <ul class="" style="display: inline-flex; list-style: none; text-align: center; width: 60%; padding-left: 0px; padding-top: 5px; margin-bottom: 5px;">
+                                <li style="width: 100%; border-right: 1px solid #d9d9d9;" onclick="divVisibility('Div1');"><i class="fa fa-newspaper-o fa-lg" aria-hidden="true" style="color: #0084B4;"></i><span> Add a Link</span></li>
+                                <li style="width: 100%; border-right: 1px solid #d9d9d9;" onclick="divVisibility('Div2');"><i class="fa fa-youtube fa-lg" aria-hidden="true" style="color: red;"></i><span> Video</span></li>  
+                            </ul>
+                        </span>                
+
+                        <div id="Div1" style="display: none;">
+                            <div class="share-content">
+                                <div class="iconos-share">
+                                    <ul style="display: inline-flex; list-style-type: none; width: 100%; margin-bottom: 3px; padding-left: 5px;">
+                                        <li style="width: 100%; display: inline-flex;">
+                                            <i class="fa fa-newspaper-o fa-lg" aria-hidden="true" style="padding: 8px;"></i>
+                                            <%= f.text_field :link, placeholder: "Mándanos un link, simplemente cópialo de la barra de direcciones", style: "margin-bottom: 3px;" %>
+
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Div2" style="display: none; ">
+                            <div class="share-content">
+                                <div class="iconos-share">
+                                    <ul style="display: inline-flex; list-style-type: none; width: 100%; margin-bottom: 3px;  padding-left: 5px;">
+                             
+                                        <li style="width: 100%; display: inline-flex;">
+                                            <i class="fa fa-video-camera fa-lg" aria hidden="true" style="padding: 8px;"></i>
+                                            <%= f.text_field :video, placeholder: "O quizá un video. Copia el codigo del video de Youtube", style: "margin-bottom: 3px;" %>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div> 
+                                                                             
+                    </ul>
+                </div>
+                <ul style="display: inline-flex; list-style-type: none; width: 100%; margin-bottom: 3px; padding-left: 0px;">
+                    <li style="padding-top: 8px; width: 60%; margin-left: 5px; margin-right: 15px; display: inline-flex;">
+                        <i class="fa fa-user" aria-hidden="true" style="padding-top: 5px; color: #9542f4;"></i><i class="fa fa-comments-o" style="color: #9542f4;"></i></i>&nbsp;
+                        <%= f.text_field :hashtag1, placeholder: " Hashtag...", style: "margin-bottom: 5px;" %>
+                    </li>
+                    <li style="width: 30%; padding-top: 5px; font-size: 11px;" >
+                        <%= f.hidden_field :petition, :value => true %>
+                        <% if @plaza != nil %>
+                            <%= f.hidden_field :plaza_id, :value => @plaza %>
+                        <% end %>
+                        <%= f.hidden_field :hashtag2, :value => "posts" %>
+                        <%= f.submit "Crear consulta", class: "btn btn-info btn-sm", style: "background-color: #c2d7f9; color: black; border: 0px;" %> 
+                    </li>
+                </ul>                
+            <% end %>
+
+            <script>
+                var divs = ["Div1", "Div2", "Div3", "Div4", "Div5"];
+                var visibleDivId = null;
+                function divVisibility(divId) {
+                    if(visibleDivId === divId) {
+                        visibleDivId = null;
+                      } else {
+                        visibleDivId = divId;
+                      }
+                      hideNonVisibleDivs();
+                    }
+                    function hideNonVisibleDivs() {
+                      var i, divId, div;
+                      for(i = 0; i < divs.length; i++) {
+                        divId = divs[i];
+                        div = document.getElementById(divId);
+                        if(visibleDivId === divId) {
+                          div.style.display = "block";
+                        } else {
+                          div.style.display = "none";
+                        }
+                      }
+                    }
+            </script>
+
+            <script type="text/javascript">
+              $('#micropost_picture').bind('change', function() {
+                var size_in_megabytes = this.files[0].size/1024/1024;
+                if (size_in_megabytes > 2) {
+                  alert('Maximum file size is 2MB. Please choose a smaller file.');
+                }
+              });
+            </script>
+
+        </section>
+    </div>
+</div>
+</div>  
+
+
+
+
+
+
+
+
+
+
+
+
+
+

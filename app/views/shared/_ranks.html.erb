@@ -1,0 +1,19 @@
+<% @user ||= current_user %>
+<div class="stats">
+  <a href="/lista">
+    <strong id="following" class="stat">
+      <%= @user.following.count %>
+    </strong>
+    seguidores
+  </a>
+  <a href="<%= followers_user_path(@user) %>">
+    <strong id="followers" class="stat">
+      <%= @user.followers.count %>
+    </strong>
+    seguidos
+  </a>
+<div class="container"><h4>Usuarios recomendados</h4>
+  <%= render @users %>
+  </div>
+  
+</div>

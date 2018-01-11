@@ -1,0 +1,68 @@
+<%= image_tag current_user.foto.url, class: "img-rounded", size: 150 if current_user.foto? %>
+<h1><%= current_user.name %></h1>
+<span><%= link_to "view my profile", current_user %></span>
+<span class="badge"><%#  pluralize(current_user.microposts.count, "micropost") %></span>
+
+<ul style="list-style: none; padding-left: 0px; ">
+	<li style="border-bottom: 1px solid  #e6e6e6; border-top: 1px solid #e6e6e6;">
+		<!-- Pueblos -->
+		<h6 style="margin-bottom: 2px;">Círculo Municipal:</h6>
+		<% @pueblo = Plaza.where(:name => current_user.ciudad) %>
+			<% if @pueblo.any? %>	
+				<% @pueblo.each do |pueblo| %>
+					<h5 style="margin-top: 2px; font-size: 12px;padding-left: 5px;"><%= image_tag pueblo.foto.url, class: "img-circle", size: 40 if pueblo.foto? %>  <%= link_to pueblo.name, user_plaza_path(:id => pueblo.id, :user_id => current_user.id) %></h5>
+					<% end %>
+			<% else %>
+				<div class="sigue_plaza" style="background-color: #ffffcc; border-radius: 5px; padding: 0px 0px; font-size: 12px;">
+					<%= link_to "Crea el círculo", new_user_plaza_path(current_user)  %>
+				</div>
+			<% end %>
+	</li>
+
+	<li style="border-bottom: 1px solid #e6e6e6">
+		<!-- Autonomia -->
+		<h6 style="margin-bottom: 2px;">Círculo autonómico</h6>
+		<% @autonomia = Plaza.where(:name => current_user.autonomia) %>
+		<% if @autonomia.any? %>	
+				<% @autonomia.each do |autonomia| %>
+					<h5 style="margin-top: 2px; font-size: 12px;padding-left: 5px;"><%= image_tag autonomia.foto.url, class: "img-circle", size: 40 if autonomia.foto? %>  <%= link_to autonomia.name, user_plaza_path(:id => autonomia.id, :user_id => current_user.id) %></h5>
+					<% end %>
+			<% else %>
+				<div class="sigue_plaza" style="background-color: #ffffcc; border-radius: 5px; padding: 0px 0px; font-size: 12px;">
+					Crea el círculo <h4 style="margin: 0px;"><%= link_to current_user.autonomia, new_user_plaza_path(current_user) %></h4>
+				</div>
+			<% end %>
+	</li>
+
+	<li style="border-bottom: 1px solid #e6e6e6">
+		<!-- Profesion -->
+		<h6 style="margin-bottom: 2px;">Círculo Profesional</h6>
+		<% @profesion = Plaza.where(:name => current_user.profesion) %>
+		<% if @profesion.any? %>	
+				<% @profesion.each do |profesion| %>
+					<h5 style="margin-top: 2px; font-size: 12px;padding-left: 5px;"><%= image_tag profesion.foto.url, class: "img-circle", size: 40 if profesion.foto? %>  <%= link_to profesion.name, user_plaza_path(:id => profesion.id, :user_id => current_user.id) %></h5>
+					<% end %>
+			<% else %>
+				<div class="sigue_plaza" style="background-color: #ffffcc; border-radius: 5px; padding: 0px 0px; font-size: 12px;">
+					Crea el círculo <h4 style="margin: 0px;"><%= link_to current_user.profesion, new_user_plaza_path(current_user) %></h4>
+				</div>
+			<% end %>
+	</li>
+
+	<li style="border-bottom: 1px solid #e6e6e6">
+		<!-- Otras plazas -->
+		<h6 style="margin-bottom: 2px;">Todas tus plazas</h6>
+		<% @grupos = Group.where(:user_id => current_user.id) %>
+		<ul style="list-style: none; padding-left: 0px;">
+			<% @grupos.each do |grupo| %>
+			<% @plazas_seguidas = Plaza.where(:id => grupo.plaza_id) %>
+			<% @plazas_seguidas.each do |plaza_seguida| %>
+				<li style="display: inline-flex;">
+				<%= image_tag plaza_seguida.foto.url, class: "img-circle", size: 40 if plaza_seguida.foto? %>
+				<h5 style="font-size: 12px; padding-top: 4px; padding-left: 5px;"><%= link_to plaza_seguida.name, user_plaza_path(:id => plaza_seguida.id, :user_id => current_user.id) %></h5>
+				</li>
+			<% end %>
+		<% end %>
+		</ul>
+	</li>
+</ul>

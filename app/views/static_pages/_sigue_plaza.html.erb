@@ -1,0 +1,153 @@
+<% if current_user.autonomia != nil %>
+	<div class="scroll_masvotados_lobby">
+		<ul style="padding: 0px; list-style: none; display: inline-flex;">
+
+			<% @pueblo = Plaza.where(:name => current_user.ciudad) %>
+				<% if @pueblo.any? %>	
+					<% @pueblo.each do |pueblo| %>
+						<% @siguiendo_pueblo = Group.where(:user_id => current_user.id).where(:plaza_id => pueblo.id) %>
+						<% if @siguiendo_pueblo.any? %>	
+						
+						<% else %>
+							<li style="background-color: white; border: 3px solid blue; border-radius: 15px;">
+								<div class="sigue_lobby" style="">
+									<ul style="padding: 0px;">
+										<li>						
+											<h5 style="margin: 0px;"><b>No sigues el lobby <%= current_user.ciudad %></b></h5>
+										</li>
+										<li>
+											Por defecto tenemos desactivada tu asociación al lobby de <%= pueblo.name %>, 
+											<b><%= link_to pueblo.name, user_plaza_path(:id => pueblo.id, :user_id => current_user.id) %></b>									
+										</li>
+									</ul>
+								</div>									
+							</li>
+						<% end %>
+					<% end %>
+				<% else %>
+					<% if current_user.ciudad != nil %>
+						<li style="background-color: white; border: 3px solid #1DA1F2; border-radius: 15px;">
+							<div class="crear_lobby" style="color: grey;">
+								<ul style="padding: 0px;">
+									<li>						
+										<h5 style="margin: 0px;"><b>Crea el lobby <%= current_user.ciudad %></b></h5>								
+									</li>
+									<li>
+										No está creado el círculo de tu ciudad. <b><%= link_to "Créalo", new_user_plaza_path(current_user, name: current_user.ciudad)  %></b>									
+									</li>
+								</ul>
+							</div>
+						</li>
+					<% else %>
+						<li style="background-color: white; border: 3px solid #1DA1F2; border-radius: 15px;">
+							<div class="crear_lobby" style="color: grey;">
+								<ul style="padding: 0px;">
+									<li>						
+										<h5 style="margin: 0px;"><b>Selecciona tus lobbies administraivos</b></h5>								
+									</li>
+									<li>
+										Selecciona los lobbies que te afecten, en ellos se hacen propuestas todos los días. <b><%= link_to "Créalos", edit_administrative_user_path( current_user) %></b>									
+									</li>
+								</ul>
+							</div>
+						</li>				
+					<% end %>
+				<% end %>
+
+
+			<% @provincia = Plaza.where(:name => current_user.provincia) %>
+				<% if @provincia.any? %>	
+					<% @provincia.each do |provincia| %>
+						<% @siguiendo_provincia = Group.where(:user_id => current_user.id).where(:plaza_id => provincia.id) %>
+						<% if @siguiendo_provincia.any? %>
+						<% else %>
+						<li style="background-color: white; border: 3px solid #f4ac41; border-radius: 15px;">
+							<div class="sigue_lobby" style="">
+								<ul style="padding: 0px;">
+									<li>						
+										<h5 style="margin: 0px;"><b>No sigues el lobby <%= current_user.provincia %></b></h5>
+									</li>
+									<li>
+										Por defecto, está desactivada tu asociación a la plaza <%= provincia.name %>, 
+										<b><%= link_to provincia.name, user_plaza_path(:id => provincia.id, :user_id => current_user.id) %></b>									
+									</li>
+								</ul>
+							</div>
+						</li>
+
+						<% end %>
+					<% end %>
+				<% else %>
+					<li style="background-color: white; border: 3px solid #f4ac41; border-radius: 15px;">
+						<div class="crear_lobby" style="color: grey;">
+							<ul style="padding: 0px;">
+								<li>						
+									<h5 style="margin: 0px;"><b>Crea el lobby <%= current_user.provincia %></b></h5>								
+								</li>
+								<li>
+									No está creado el círculo de tu provincia. <b><%= link_to "Créalo", new_user_plaza_path(current_user, name: current_user.provincia)  %></b>									
+								</li>
+							</ul>
+						</div>
+					</li>
+				<% end %>	
+
+
+			<% @autonomia = Plaza.where(:name => current_user.autonomia) %>
+				<% if @autonomia.any? %>	
+					<% @autonomia.each do |autonomia| %>
+						<% @siguiendo_autonomia = Group.where(:user_id => current_user.id).where(:plaza_id => autonomia.id) %>
+						<% if @siguiendo_autonomia.any? %>
+						<% else %>
+							<li style="background-color: white; border: 3px solid #9542f4; border-radius: 15px;">
+								<div class="sigue_lobby" style="">
+									<ul style="padding: 0px;">
+										<li>						
+											<h5 style="margin: 0px;"><b>No sigues el lobby <%= current_user.autonomia %></b></h5>
+										</li>
+										<li>
+											Por defecto tenemos desactivada tu asociación al lobby <%= autonomia.name %>, 
+											<b><%= link_to autonomia.name, user_plaza_path(:id => autonomia.id, :user_id => current_user.id) %></b>									
+										</li>
+									</ul>
+								</div>
+							</li>
+						<% end %>
+					<% end %>
+				<% else %>
+					<li style="background-color: white; border: 3px solid #9542f4; border-radius: 15px;">
+						<div class="crear_lobby" style="color: grey;">
+							<ul style="padding: 0px;">
+								<li>						
+									<h5 style="margin: 0px;"><b>Crea el lobby de <%= current_user.autonomia %></b></h5>								
+								</li>
+								<li>
+									No está creado el círculo de tu autonomia. <b><%= link_to "Créalo", new_user_plaza_path(current_user, name: current_user.autonomia)  %></b>									
+								</li>
+							</ul>
+						</div>
+					</li>
+				<% end %>
+		</ul>
+	</div>
+
+<% else %>
+	<div class="scroll_masvotados_lobby">
+		<ul style="padding: 0px; list-style: none; display: inline-flex;">
+			<li style="background-color: white; border: 3px solid #1DA1F2; border-radius: 15px;">
+				<div class="crear_lobby" style="color: grey;">
+					<ul style="padding: 0px;">
+						<li>						
+							<h5 style="margin: 0px;"><b>Selecciona tus lobbies administraivos</b></h5>								
+						</li>
+						<li>
+							Selecciona los lobbies que te afecten, en ellos se hacen propuestas todos los días. <b><%= link_to "Seleccionalos", edit_administrative_user_path( current_user) %></b>									
+						</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</div>
+<% end %>
+	
+	

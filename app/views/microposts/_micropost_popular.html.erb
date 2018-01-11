@@ -1,0 +1,111 @@
+<li id="micropost-<%= micropost.id %>">
+<div class="petition-title">
+  <% if micropost.title? %>
+    <div class="if-petition">Petition</div>
+    <h4><b><%= link_to micropost.title, controller: "microposts", action: "show", id: micropost.id %></b></h4>
+  <% else %>
+  <% end %>
+</div>
+
+<div class="header-post" style="">
+  <span style="padding-left: 15px; margin-top: 10px;">
+    <%= image_tag (micropost.user.foto.url), class: "img-circle", size: 40 if micropost.user.foto? %>
+  </span>
+  <ul class="user-data" style="background-color: transparent;">
+    <li style="font-size: 15px;">
+      <% if micropost.plaza_id? %>
+      <!-- <%= @plaza =  Plaza.where(:id => micropost.plaza_id).first %>-->
+      <b><%= link_to micropost.user.name, micropost.user %></b><span class="plaza-seguida"> ha publicado en 
+        <b><%= @plaza.name %></b></span>
+      <% else %>
+      <b><%= link_to micropost.user.name, micropost.user %></b>
+      <% end %>
+    </li>
+    <li style="display: inline-flex; font-size: 11px; ">
+      <%= micropost.user.followers.count %> followers
+    </li>
+    <li>
+      <span class="timestamp">
+        Posted <%= time_ago_in_words(micropost.created_at) %> ago.
+        <% if current_user?(micropost.user) %>
+          <%= link_to "delete", micropost, method: :delete, data: { confirm: "You sure?" }, id: micropost.id %>
+        <% end %>
+      </span>
+    </li>
+    <li style="font-size: 11px;">
+      <%# micropost.plaza_id %>
+      <%# @plaza = User.where(:id => micropost.plaza_id).first %>
+      <%# @plaza_name%>
+    </li>
+  </ul>
+</div>
+  <!--  Contenido texto -->
+  <span class="content">
+    <%= micropost.content %> 
+  </span>
+  <!--  Imagen -->
+  <% if micropost.picture? %>
+    <div class="picture_content"> <%= image_tag (micropost.picture.url), class: "img-responsive", width: "100%"   %> 
+    </div>
+  <% end %>
+
+  <!--  video -->
+  <% if micropost.video? %>
+    <div class="video-responsive">
+      <iframe src="https://www.youtube.com/embed/<%= micropost.video %>" frameborder="0" allowfullscreen></iframe>
+    </div>
+  <% end %>
+
+  <!--  links -->
+  <% if micropost.link? %>
+    <div class="links">  
+      <!-- <%= doc = Nokogiri::HTML(open(micropost.link), nil, 'UTF-8', 'ISO-8859') %> -->
+      <h4><span class= "content" style="padding-top: 5px; margin-left: : 2px; "><%= @title = doc.at_css("title").text %></span></h4>
+       <!-- <%= @src = doc.xpath('//body//img[@width > 300 or @alt = @title]/@src')  %> -->
+       <% if @src != nil %>
+        <div class="picture_content" style="max-height: 400" >
+        <%= image_tag (@src.first), class: "img-responsive", width: "100%" if @src.any? %>
+        </div>
+      <% end %>
+  
+      <a style="padding: 5px; overflow: hidden; text-overflow:ellipsis;">
+        <%= link_to truncate(micropost.link.scan( /([^>]*)./).first.last, :length => 30), micropost.link %></a>
+    </div>       
+  <% end %>  
+
+<!-- votos -->
+<ul class="social_elements" style="">
+  <li style="display: inline-flex;">
+    <%= button_tag(:class => "btn btn-link btn-sm") do %> <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i> <%= @votosPositivos = micropost.votes.where(:like => 1).count %></span>
+          Like
+    <% end %>
+    <%= button_tag(class: "btn btn-link btn-sm") do %><i class="fa fa-thumbs-o-down fa-lg" aria-hidden="true"></i> <%= @votosNegativos = micropost.votes.where(:dislike => 1).count %></span>  Down
+    <% end %>
+  </li>
+    
+<!-- hashtags -->
+  <li style="padding-top: 10px; text-align: right;">
+    <% if micropost.hashtag1? %>
+      <a class="hashtag"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span><%= link_to micropost.hashtag1,hashtag_micropost_path(micropost) %></a>
+    <% end %>
+  </li>
+
+<!-- comentarios -->
+  <li style="padding-top: 10px;">
+    <span class="numbercomments"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>          <%= micropost.comments.count %> comentarios</span>
+  </li>
+</ul>
+
+<!-- comentarios --> 
+<div class="" style="background-color: #f2f2f2;">  
+  <% micropost.comments.order("created_at desc").take(3).each do |comment| %>
+    <span class="comentario">
+      <% if micropost.comments.any? %>
+        <span style="margin: 0px; padding-top: 5px;"><%= image_tag (comment.user.foto.url), class: "img-circle", size: 30 if comment.user.foto? %>
+          <%= link_to comment.user.name, comment.user %>        <%= comment.contenido %></span>
+          <span class="" style="font-size: 11px; color: #8c8c8c;"> <%= time_ago_in_words(comment.created_at) %> ago.</span>
+      <% else %>
+      <% end %>         
+    </span>
+  <% end %>
+</div>

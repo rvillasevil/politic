@@ -1,0 +1,47 @@
+<% provide(:title, 'Popular') %>
+  <div class="container">
+    <div class="row">
+      
+      <aside class="col-sm-6">
+          <%# render 'shared/user_info' %>
+          <%= render 'microposts/petition_short' %>
+        <section class="stats">
+          <%# render 'shared/stats' %>
+        </section>
+      </aside>
+
+      <div class="col-sm-6">
+      <% if logged_in? %>
+        <%= render 'static_pages/sigue_plaza' %>
+      <% end %>
+      
+        <div class="home_popular" style="margin-top: 0px;">
+          <ul>
+            <li class="popular"> 
+              <h3 style="margin: 0px; font-size: 16px;"><%= link_to "now", 'popular_last_day', style: "color: grey;" %></h3>
+            </li>            
+            <li class="popular">
+              <h3 style="margin: 0px; font-size: 16px;"><%= link_to "home", root_url, style: "color: grey;" %></h3>  
+            </li>
+            <li class="home">
+              <h3 style="margin: 0px;"><%= link_to "popular", '/popular'  %></h3>
+            </li>
+          </ul>
+        </div>
+        <ul class="microposts">
+
+          <%# render @microposts %>
+          <% @posts_masvotados = @posts_masvotados.last(100).paginate(page: params[:page], per_page: 10).each do |posts_masvotados| %>
+            <% @microposts = Micropost.where(id: posts_masvotados) %>
+            <%= render @microposts %>
+          <% end %>
+          <%= will_paginate @posts_masvotados %>
+
+          <%# .where(created_at: 7.days.ago..Time.current)%>
+          <div class="instrucciones">
+            Para tener más post, sigue a más personas, participa en más círculos o colabora con más acciones o causas.
+          </div>
+        </ul>     
+    </div>
+  </div>
+</div>

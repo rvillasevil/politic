@@ -1,0 +1,79 @@
+<% @posts = Micropost.where(:user_id => current_user.id) %>
+<% @peticiones = Micropost.where(:user_id => current_user.id).where(:petition => true) %>
+<% @peticiones_all = Micropost.where(:petition => true) %>
+<% @plazas_grupos = Group.where(:user_id => current_user.id) %>
+
+<div class="plazas_info">
+  <ul>
+    <% if current_user.autonomia? %>
+    	<li>
+    		<!-- Pueblos -->
+    		<span>Círculo Municipal:</span>
+        <% current_user.ciudad if current_user.ciudad %>
+    		<%  %>
+    			<% if (@pueblo = Plaza.where(:name => current_user.ciudad)).any? %>	
+    				<% @pueblo.each do |pueblo| %>
+    					<h5 style="margin-top: 2px; font-size: 12px;padding-left: 5px;"><%= image_tag pueblo.foto.url, class: "img-circle", size: 40 if pueblo.foto? %>  <b><%= link_to pueblo.name, user_plaza_path(:id => pueblo.id, :user_id => current_user.id) %></b></h5>
+    					<% end %>
+    			<% else %>
+    				<div class="sigue_plaza">
+    					El círculo aún no está creado, <%= link_to "Sé el primero", new_user_plaza_path(current_user, name: current_user.ciudad) %>
+    				</div>
+    			<% end %>
+    	</li>
+
+      <li>
+        <!-- Provincia -->
+        <span style="margin-bottom: 2px;">Círculo Provincial:</span>
+        <% current_user.provincia if current_user.provincia? %>
+          <% if (@provincia = Plaza.where(:name => current_user.provincia)).any? %> 
+            <% @provincia.each do |provincia| %>
+              <h5 style="margin-top: 2px; font-size: 12px;padding-left: 5px;"><%= image_tag provincia.foto.url, class: "img-circle", size: 40 if provincia.foto? %>  <b><%= link_to provincia.name, user_plaza_path(:id => provincia.id, :user_id => current_user.id) %></b></h5>
+              <% end %>
+          <% else %>
+            <div class="sigue_plaza">
+              El círculo aún no está creado, <%= link_to "Sé el primero", new_user_plaza_path(current_user, name: current_user.provincia) %>
+            </div>
+          <% end %>
+      </li>
+
+    	<li>
+    		<!-- Autonomia -->
+    		<span style="margin-bottom: 2px;">Círculo autonómico</span>
+        <% current_user.autonomia if current_user.autonomia %>
+
+    		<% if (@autonomia = Plaza.where(name: current_user.autonomia)).any?  %>
+    				<% @autonomia.each do |autonomia| %>
+    					<h5 style="margin-top: 2px; font-size: 12px;padding-left: 5px;"><%= image_tag autonomia.foto.url, class: "img-circle", size: 40 if autonomia.foto? %> <b><%= link_to autonomia.name, user_plaza_path(:id => autonomia.id, :user_id => current_user.id) %></b></h5>
+    					<% end %>
+    			<% else %>
+    				<div class="sigue_plaza">
+    					El círculo aún no está creado, <%= link_to "Sé el primero", new_user_plaza_path(current_user, name: current_user.autonomia) %>
+    				</div>
+    			<% end %>
+    	</li>
+    <% else %>
+      <div class="instrucciones">
+        No tienes marcadas tus círculos administrativos. Márcalos para acceder a las listas electorales y participar de las decisiones que se toman en tus círculos.
+        <%= link_to "Participa", edit_administrative_user_path(id: current_user), class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+  	<li>
+  		<!-- Otras plazas -->
+  		<span>Todas tus plazas</span>
+  		<% @grupos = Group.where(:user_id => current_user.id) %>
+      <% if @grupos.any? %>
+  			<% @grupos.each do |grupo| %>
+  			<% @plazas_seguidas = Plaza.where(:id => grupo.plaza_id).where.not(name: current_user.ciudad).where.not(name: current_user.provincia).where.not(name: current_user.autonomia) %>
+    			<% @plazas_seguidas.each do |plaza_seguida| %>
+    				<li style="display: inline-flex; align-items: center;">
+    				<%= image_tag plaza_seguida.foto.url, class: "img-circle", size: 40 if plaza_seguida.foto? %>
+    				<h5 style="font-size: 12px; padding-top: 4px; padding-left: 5px;"><b><%= link_to plaza_seguida.name, user_plaza_path(:id => plaza_seguida.id, :user_id => current_user.id) %></b></h5>
+    				</li>
+          <% end %>
+  		  <% end %>
+      <% end %>
+  	</li>
+  </ul>
+</div>

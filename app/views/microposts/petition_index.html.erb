@@ -1,0 +1,782 @@
+<div class="container">
+<% provide(:title, 'Consultas') %>    
+	<div class="row">
+    <aside class="col-sm-2">
+      <section class="user_info">
+        <%= render 'shared/user_info' %>
+      </section>
+    </aside>
+
+	  <div class="col-sm-6">
+
+			<span class="emoticons">
+		    <div style="width: 100%;">
+	        <ul class="" style="display: inline-flex; list-style: none; text-align: center; width: 100%; padding-left: 0px; padding-top: 5px; margin-bottom: 10px;">
+
+            <% @votos_petitions = Vote.where(micropost_id: current_user.feed_petition).where(user_id: current_user).count %>
+            <% @pendientes = current_user.feed_petition.count - @votos_petitions %>
+            &nbsp;	        	
+
+            <button type="button" class="btn btn-primary" onclick="divVisibility('Div1');" style="width: 33%; margin-right: 10px; font-size: 13px; background-color: white; border: 1px solid #0084B4; color: #0084B4;">
+              <% if @pendientes > 0 %>
+                <div style="background: red; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+                      <b><%= @pendientes %></b>
+                </div>
+              <% else %>
+                <div style="background: green; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+                      <b><%= @pendientes %></b>
+                </div>
+              <% end %>            	
+            	Tus Consultas
+            </button>
+
+
+            <% @votos_petitions = Vote.where(micropost_id: current_user.petitions_public).where(user_id: current_user).count %>
+            <% @pendientes = current_user.petitions_public.count - @votos_petitions %> 
+            &nbsp;
+
+            <button type="button" class="btn btn-primary" onclick="divVisibility('Div2');" style="width: 33%; margin: 0px 10px; font-size: 13px; background-color: white; border: 1px solid #0084B4; color: #0084B4;">
+	            <% if @pendientes > 0 %>
+	              <div style="background: red; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+	                    <b><%= @pendientes %></b>
+	              </div>
+	            <% else %>
+	              <div style="background: green; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+	                    <b><%= @pendientes %></b>
+	              </div>
+	            <% end %>            	
+            	Públicas
+            </button>
+
+            <button type="button" class="btn btn-primary" onclick="divVisibility('Div3');" style="width: 33%; margin: 0px 10px; font-size: 13px; background-color: white; border: 1px solid #0084B4; color: #0084B4;"><i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"></i> Votadas
+            </button>
+
+	        </ul>        
+		    </div>
+			</span>
+
+	    <div id="Div1" style="">
+		    <!-- consultas pendientes por votar -->
+		   	<% if @petitions.where(petition: true).any? %>
+				  <div style="border: 1px solid #dddfe2; margin-bottom: 15px;">
+				  	<ul style="padding-left: 0px; list-style: none; margin: 0px;">
+							<li style="background-color: white; padding: 10px; list-style: none;">
+								<h3 style="margin: 0px; width: 70%;"><b></b>Tus consultas pendientes</h3>								
+							</li>
+							<li>
+								<ul style="list-style: none; padding-left: 0px; display: inline-flex; width: 100%; background-color: white;">
+									<li style="background-color: white; padding: 10px; list-style: none; width: 80%;">
+										<i class="fa fa-info" aria-hidden="true"></i>&nbsp;
+					  		 		Index con las consultas de tu feed principal que tienes pendientes.
+									</li>
+									<li style="float: right; padding: 10px;">
+										<%= link_to "Nueva consulta", '/petition', class: "btn btn-primary btn-sm", style: " padding: 5px; color: white; border: none;" %>
+									</li>										
+								</ul>
+							</li>									
+				  	</ul>				  	
+				  </div>
+
+			   	<% @petitions.each do |micropost| %>
+			   		<% if Vote.where(micropost_id: micropost).where(user_id: current_user).any? %>
+
+			   		<% else %>
+				   		<% if micropost.petition == true %>
+								<div class="petition_index">
+									<ul class="principal" style="padding-left: 0px;">
+										<li>
+											<ul style="padding-left: 0px; list-style: none; display: inline-flex; overflow: hidden; width: 100%;">
+												<% if micropost.picture? %>
+													<li style="min-width: 30%; max-width: 30%;">
+														<!--  Imagen -->
+												    <div class="picture_content_petition_index" style=""> <%= image_tag (micropost.picture.url), class: "img_petition_index", style: "height: 150%; width: 200%;" %> 
+												    </div>
+													</li>
+												<% end %>	
+												<li style="width: 70%;"> 
+													<ul style="padding-left: 0px; display: block; list-style: none;">
+														<li class="title-petition" style="width: 100%;">
+															<!--  Titulo -->
+															<h3 style="margin: 0px;"><b><%= link_to micropost.title, micropost_path(id: micropost.id), style: "color: black;" %></b></h3>
+														</li>
+														<li class="content">
+															<!--  Contenido texto -->
+															<%= truncate(micropost.content, :length => 100) %>
+															<%= link_to ".more", controller: "microposts", action: "show", id: micropost.id %>
+														</li>														
+													</ul>
+												</li>
+										
+											</ul>
+										</li>
+
+										<div class="votos_seguidores">
+											<div style="font-size: 14px"><b>Lo que opinan tus amigos</b></div>
+											<% @seguidores = current_user.following.count %>
+											<% @votos_post_seguidores = Vote.where(micropost_id: micropost).where(user_id: current_user.following) %>
+											<% @votos_post_seguidores.first(10).each do |votos_seguidores| %>
+												<% @seguido_voto = User.where(id: votos_seguidores.user_id) %>
+												<% @seguido_voto.each do |seguido| %>
+													<b><%= link_to seguido.name, seguido, {style: "color: #7e7e81;"} %></b>&nbsp;
+													<% if votos_seguidores.like == 1 %>
+									          <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true" style="color: green;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            apoya la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% else %>
+									          <i class="fa fa-thumbs-o-down fa-lg" aria-hidden="true" style="color: red;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            rechaza la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            no le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% end %>
+												<% end %>
+											<% end %>
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario" style="width: 100%; font-size: 12px; padding: 0px;">
+											  <li style="display: inline-flex; border-left: 1px solid #dddfe2; padding: 5px; line-height: 8px; text-align: center; width: 33%; ">
+											  	<% if micropost.plaza_id != nil %>
+														<ul style="padding-left: 0px; display: block;">
+															<li class="right" style="align-items: center; margin-bottom: 10px;">
+							                  <%# porcentaje = porcetaje de votos emitidos por seguidores de la plaza, votos_seguidores / seguidores %>
+							                  <% @votos_seguidores = Vote.where(micropost_id: micropost) %>
+							                  <% @grupo_seguidores = Group.where(plaza_id: params[:plaza_id]) %>
+							                  <% if @votos_seguidores.any? %>
+							                    <% @votos_seguidores.count %>
+							                    <% @votos_seguidores_positivos = @votos_seguidores.where(like: 1) %>
+							                    <% @votos_seguidores_positivos_porcentaje = @votos_seguidores_positivos.count * 100 / (@votos_seguidores.count) %>
+							                    <% if @votos_seguidores.any? %>
+							                      <% @porcentaje = (@votos_seguidores.count*100 / (@grupo_seguidores.count)) %>
+							                    <% else %>
+							                      <% @porcentaje = 0 %>
+							                    <% end %>
+
+							                    <% @valor_limite = 67 %>
+							                    <% @votos = Vote.where(:micropost_id => micropost) %>
+							                    <% @votos = @votos.count %>
+							                    <% @grupo_seguidores.count %> 
+							                    <% @votos_seguidores.count %> 
+							                    <% @votos_seguidores_positivos.count %> 
+							                    <% @votos_seguidores_positivos_porcentaje %>
+							                    <% @porcentaje %>
+							                    <% (1*100/(2)) %> 
+							                 
+							                    <% if @porcentaje >= @valor_limite %>
+							                      <% if @votos_seguidores_positivos_porcentaje > 1/(2)*100 %>
+							                        <button type="button" class="btn btn-success" style="margin: 0px; font-size: 12px; padding: 3px;"><span class="">Aprobada</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                      <% else %>
+							                        <button type="button" class="btn btn-danger" style="margin: 0px; font-size: 12px; padding: 3px;"><span class="">Denegada</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                      <% end %>
+							                    <% else %>
+							                      &nbsp;<button type="button" class="btn btn-danger" style="background-color: white; border: 1px solid #0084B4; color: #0084B4; margin: 0px; font-size: 12px; padding: 3px;"><span class="">In progress</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                    <% end %>
+							                  <% else %>
+							                    <div style="line-height: 12px; text-align: center;"><b>0 votos</b></div>
+							                  <% end %>
+							                </li>														
+														</ul>
+													<% else %>
+														<button type="button" class="btn btn-success" style="margin: 0px; margin-bottom: 10px; font-size: 12px; padding: 3px; background-color: white; border: 1px solid grey; color: grey;"><span class="">Consulta pública</span></button> 
+													<% end %>
+												</li>												  										  
+											  <li class="" style="display: inline-flex; width: 66%; font-size: 14px; padding-top: 5px; text-align: center;">
+											  	
+											  	<div style="align-items: center;">
+											  		<%= micropost.votes.where(like: 1).count %> defensores&nbsp;&nbsp;|&nbsp;&nbsp;
+											  	</div>
+													
+											  	<div style="align-items: center;">
+														<% if micropost.votes.count > 0 %>
+															<% @porcentaje_positivos =  micropost.votes.where(like: 1).count*100/(micropost.votes.count) %>
+						                	<% if @porcentaje_positivos >= 50 %>
+							                	<div style="color: green; font-size: 14px;">
+							                		<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> (<%= @porcentaje_positivos %> %)
+							                	</div>
+							                <% else %>
+							                	<div style="color: red; align-items: center;">
+							                		<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> (<%= @porcentaje_positivos %> %)
+							                	</div>
+							                <% end %>							                	
+						                <% else %>
+						                  0 votos
+						                <% end %>											  		
+											  	</div>
+															
+											  </li>															
+											</ul>								
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario" style="width: 100%; font-size: 12px; padding: 0px; margin-bottom: 10px;">
+												<li class="block" style="width: 5%;">
+										      <%= image_tag (micropost.user.foto.url), class: "img-circle", size: 28 if micropost.user.foto? %>
+										  	</li>
+										    <li style="width: 100%;">	
+										      <ul style="padding-left: 10px;">
+										        <li style="width: 100%; padding-left: 5px; padding-right: 5px;">
+										          <b><%= link_to micropost.user.name, micropost.user, style: "color: #4d4d4d;" %></b>
+												    	<% if micropost.hashtag1? %>
+																 sobre &nbsp;<i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i>
+                            		<b><%= link_to micropost.hashtag1, hashtag_micropost_path(id: micropost.hashtag1), style: "color: #9542f4;" %></b>
+															 <% end %>
+
+																<% if micropost.plaza_id? %>
+																	<% @plaza =  Plaza.where(:id => micropost.plaza_id) %>
+																	<% @plaza.each do |plaza| %>
+																		en&nbsp;&nbsp;<i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp;<b><%= link_to plaza.name, user_plaza_path(id: plaza, user_id: current_user), {style: "color: #777777;"} %>.</b>
+																<% end %>
+															<% end %>
+														</li>
+											    </ul>
+											  </li>
+											</ul>								
+										</div>
+									</ul>
+								</div>
+							<% end %>
+
+						<% end %>
+			   	<% end %>
+			  <% end %>	
+	    </div>
+
+	    <div id="Div2" style="display: none; ">
+				<!-- consultas públicas pendientes por votar -->
+		   	<% if @petitions_public.where(petition: true).any? %>
+				  <div style="border: 1px solid #dddfe2; margin-bottom: 15px;">
+				  	<ul style="padding-left: 0px; list-style: none; margin: 0px;">
+							<li style="background-color: white; padding: 10px; list-style: none;">
+								<h3 style="margin: 0px; width: 70%;"><b>Tus consultas pendientes para toda la comunidad</b></h3>
+							</li>
+							<li>
+								<ul style="list-style: none; padding-left: 0px; display: inline-flex; width: 100%; background-color: white;">
+									<li style="background-color: white; padding: 10px; list-style: none; width: 80%;">
+										<i class="fa fa-info" aria-hidden="true"></i>&nbsp;
+					  		 Index con las consultas pendientes de votación para todos los polittizens.
+									</li>
+									<li style="float: right; padding: 10px;">
+										<%= link_to "Nueva consulta", '/petition', class: "btn btn-primary btn-sm", style: " padding: 5px; color: white; border: none;" %>
+									</li>										
+								</ul>
+							</li>
+				  	</ul>
+				  </div>
+
+			   	<% @petitions_public.each do |micropost| %>
+			   		<% if Vote.where(micropost_id: micropost).where(user_id: current_user).any? %>
+
+			   		<% else %>
+				   		<% if micropost.petition == true %>
+								<div class="petition_index">
+									<ul class="principal" style="padding-left: 0px;">
+										<li style="max-height: 150px;">
+											<ul style="padding-left: 0px; list-style: none; display: inline-flex; overflow: hidden; max-height: 200px;">
+												<% if micropost.picture? %>
+													<li style="min-width: 30%; max-width: 30%;">
+														<!--  Imagen -->
+												    <div class="picture_content_petition_index" style=""> <%= image_tag (micropost.picture.url), class: "img_petition_index", style: "height: 100%; width: 200%;" %> 
+												    </div>
+													</li>
+												<% end %>	
+												<li style="width: 70%;">
+													<ul style="padding-left: 0px; display: block; list-style: none;">
+														<li class="title-petition">
+															<!--  Titulo -->
+															<h3 style="margin: 0px;"><b><%= link_to micropost.title, micropost_path(id: micropost.id), style: "color: black;" %></b></h3>
+														</li>
+														<li class="content">
+															<!--  Contenido texto -->
+															<%= truncate(micropost.content, :length => 100) %>
+															<%= link_to ".more", controller: "microposts", action: "show", id: micropost.id %>
+														</li>														
+													</ul>
+												</li>
+										
+											</ul>
+										</li>
+
+										<div class="votos_seguidores">
+											<div style="font-size: 14px"><b>Lo que opinan tus amigos</b></div>
+											<% @seguidores = current_user.following.count %>
+											<% @votos_post_seguidores = Vote.where(micropost_id: micropost).where(user_id: current_user.following) %>
+											<% @votos_post_seguidores.first(10).each do |votos_seguidores| %>
+												<% @seguido_voto = User.where(id: votos_seguidores.user_id) %>
+												<% @seguido_voto.each do |seguido| %>
+													<b><%= link_to seguido.name, seguido, {style: "color: #7e7e81;"} %></b>&nbsp;
+													<% if votos_seguidores.like == 1 %>
+									          <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true" style="color: green;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            apoya la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% else %>
+									          <i class="fa fa-thumbs-o-down fa-lg" aria-hidden="true" style="color: red;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            rechaza la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            no le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% end %>
+												<% end %>
+											<% end %>
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario" style="width: 100%; font-size: 12px; padding: 0px;">
+											  <li style="display: inline-flex; border-left: 1px solid #dddfe2; padding: 5px; line-height: 8px; text-align: center; width: 33%; ">
+											  	<% if micropost.plaza_id != nil %>
+														<ul style="padding-left: 0px; display: block;">
+															<li class="right" style="align-items: center; margin-bottom: 10px;">
+							                  <%# porcentaje = porcetaje de votos emitidos por seguidores de la plaza, votos_seguidores / seguidores %>
+							                  <% @votos_seguidores = Vote.where(micropost_id: micropost) %>
+							                  <% @grupo_seguidores = Group.where(plaza_id: params[:plaza_id]) %>
+							                  <% if @votos_seguidores.any? %>
+							                    <% @votos_seguidores.count %>
+							                    <% @votos_seguidores_positivos = @votos_seguidores.where(like: 1) %>
+							                    <% @votos_seguidores_positivos_porcentaje = @votos_seguidores_positivos.count * 100 / (@votos_seguidores.count) %>
+							                    <% if @votos_seguidores.any? %>
+							                      <% @porcentaje = (@votos_seguidores.count*100 / (@grupo_seguidores.count)) %>
+							                    <% else %>
+							                      <% @porcentaje = 0 %>
+							                    <% end %>
+
+							                    <% @valor_limite = 67 %>
+							                    <% @votos = Vote.where(:micropost_id => micropost) %>
+							                    <% @votos = @votos.count %>
+							                    <% @grupo_seguidores.count %> 
+							                    <% @votos_seguidores.count %> 
+							                    <% @votos_seguidores_positivos.count %> 
+							                    <% @votos_seguidores_positivos_porcentaje %>
+							                    <% @porcentaje %>
+							                    <% (1*100/(2)) %> 
+							                 
+							                    <% if @porcentaje >= @valor_limite %>
+							                      <% if @votos_seguidores_positivos_porcentaje > 1/(2)*100 %>
+							                        <button type="button" class="btn btn-success" style="margin: 0px; font-size: 12px; padding: 3px;"><span class="">Aprobada</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                      <% else %>
+							                        <button type="button" class="btn btn-danger" style="margin: 0px; font-size: 12px; padding: 3px;"><span class="">Denegada</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                      <% end %>
+							                    <% else %>
+							                      &nbsp;<button type="button" class="btn btn-danger" style="background-color: white; border: 1px solid #0084B4; color: #0084B4; margin: 0px; font-size: 12px; padding: 3px;"><span class="">In progress</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                    <% end %>
+							                  <% else %>
+							                    <div style="line-height: 12px; text-align: center;"><b>0 votos</b></div>
+							                  <% end %>
+							                </li>														
+														</ul>
+													<% else %>
+														<button type="button" class="btn btn-success" style="margin: 0px; margin-bottom: 10px; font-size: 12px; padding: 3px; background-color: white; border: 1px solid grey; color: grey;"><span class="">Consulta pública</span></button> 
+													<% end %>
+												</li>												  										  
+											  <li class="" style="display: inline-flex; width: 66%; font-size: 14px; padding-top: 5px; text-align: center;">
+											  	
+											  	<div style="align-items: center;">
+											  		<%= micropost.votes.where(like: 1).count %> defensores&nbsp;&nbsp;|&nbsp;&nbsp;
+											  	</div>
+													
+											  	<div style="align-items: center;">
+														<% if micropost.votes.count > 0 %>
+															<% @porcentaje_positivos =  micropost.votes.where(like: 1).count*100/(micropost.votes.count) %>
+						                	<% if @porcentaje_positivos >= 50 %>
+							                	<div style="color: green; font-size: 14px;">
+							                		<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> (<%= @porcentaje_positivos %> %)
+							                	</div>
+							                <% else %>
+							                	<div style="color: red; align-items: center;">
+							                		<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> (<%= @porcentaje_positivos %> %)
+							                	</div>
+							                <% end %>							                	
+						                <% else %>
+						                  0 votos
+						                <% end %>											  		
+											  	</div>
+															
+											  </li>															
+											</ul>								
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario" style="width: 100%; font-size: 12px; padding: 0px; margin-bottom: 10px;">
+												<li class="block" style="width: 5%;">
+										      <%= image_tag (micropost.user.foto.url), class: "img-circle", size: 28 if micropost.user.foto? %>
+										  	</li>
+										    <li style="width: 100%;">	
+										      <ul style="padding-left: 10px;">
+										        <li style="width: 100%; padding-left: 5px; padding-right: 5px;">
+										          <b><%= link_to micropost.user.name, micropost.user, style: "color: #4d4d4d;" %></b>
+												    	<% if micropost.hashtag1? %>
+																 sobre &nbsp; <i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i>
+                            		<b><%= link_to micropost.hashtag1, hashtag_micropost_path(id: micropost.hashtag1), style: "color: #9542f4;" %></b>
+															 <% end %>
+
+																<% if micropost.plaza_id? %>
+																	<% @plaza =  Plaza.where(:id => micropost.plaza_id) %>
+																	<% @plaza.each do |plaza| %>
+																		en&nbsp;&nbsp;<i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp;<b><%= link_to plaza.name, user_plaza_path(id: plaza, user_id: current_user), {style: "color: #777777;"} %>.</b>
+																<% end %>
+															<% end %>
+														</li>
+											    </ul>
+											  </li>
+											</ul>								
+										</div>
+									</ul>
+								</div>
+							<% end %>
+
+						<% end %>
+			   	<% end %>
+			  <% end %>
+		  </div>				
+<%
+=begin%>				
+			  <% if @petitions_public.any? %>
+				  <div style="border: 1px solid #dddfe2; margin-bottom: 15px; ">
+				  	<ul style="padding-left: 0px; list-style: none; margin: 0px;">
+							<li style="background-color: white; padding: 10px; list-style: none;">
+								<h3 style="margin: 0px; margin-bottom: 10px;  width: 70%;"><b>Consultas pendientes para todos los públicos</b></h3>
+								<i class="fa fa-info" aria-hidden="true"></i>&nbsp;
+					  		 Las consultas públicas son aquellas que pueden afectar a todo el mundo y por lo tanto deben ser votadas por todo el mundo
+							</li>
+							<li>
+								<ul style="list-style: none; padding-left: 0px; display: inline-flex; width: 100%; background-color: white;">
+									<li style="background-color: white; padding: 10px; list-style: none; width: 80%;">
+										<%= link_to "Consultas ciudadanos públicas", '/petitions_public' %>
+									</li>
+									<li style="float: right;">
+										<%= link_to "Nueva consulta", '/petition', class: "btn btn-primary btn-sm", style: " padding: 5px; background-color: #5cb85c; color: white; border: none;" %>
+									</li>										
+								</ul>
+							</li>
+				  	</ul>
+				  </div>
+
+			   	<% @petitions_public.each do |micropost| %>
+			   		<% if Vote.where(micropost_id: micropost).where(user_id: current_user).any? %>
+
+			   		<% else %>
+				   		<% if micropost.petition == true %>
+								<div class="petition_index">
+									<div class="principal">
+										<div>
+											<!--  Imagen -->
+											<% if micropost.picture? %>
+										    <div class="picture_content_petition_index"> <%= image_tag (micropost.picture.url), class: "img_responsive", style: "width: 100%;" %> 
+										    </div>
+											<% end %>
+										</div>
+										
+										<div class="title-petition">
+											<!--  Titulo -->
+												<h3><b><%= link_to micropost.title, micropost_path(id: micropost.id), style: "color: black;" %></b></h3>
+										</div>
+
+										<div class="content">
+											<!--  Contenido texto -->
+												<%= truncate(micropost.content, :length => 150) %>
+												<%= link_to ".more", controller: "microposts", action: "show", id: micropost.id %>
+										</div>
+
+										<div class="votos_seguidores">
+											<div style="font-size: 16px"><b>Lo que opinan tus amigos</b></div>
+											<% @seguidores = current_user.following.count %>
+											<% @votos_post_seguidores = Vote.where(micropost_id: micropost).where(user_id: current_user.following) %>
+											<% @votos_post_seguidores.each do |votos_seguidores| %>
+												<% @seguido_voto = User.where(id: votos_seguidores.user_id) %>
+												<% @seguido_voto.each do |seguido| %>
+													<b><%= link_to seguido.name, seguido, {style: "color: #7e7e81;"} %></b>&nbsp;
+													<% if votos_seguidores.like == 1 %>
+									          <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true" style="color: green;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            apoya la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% else %>
+									          <i class="fa fa-thumbs-o-down fa-lg" aria-hidden="true" style="color: red;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            rechaza la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            no le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% end %>
+												<% end %>
+											<% end %>
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario">
+												<li class="block">
+										      <%= image_tag (micropost.user.foto.url), class: "img-circle", size: 38 if micropost.user.foto? %>
+										  	</li>
+										    <li>	
+										      <ul class="block">
+										        <li style="width: 100%;">
+										          <b><%= link_to micropost.user.name, micropost.user %></b>
+
+											    	<% if micropost.hashtag1? %>
+															 sobre &nbsp; <span class="fa fa-tags" aria-hidden="true"></span>&nbsp;<b><%= link_to micropost.hashtag1, hashtag_micropost_path(micropost), {style: "color: #777777;"} %></b>
+														 <% end %>
+
+															<% if micropost.plaza_id? %>
+																<% @plaza =  Plaza.where(:id => micropost.plaza_id) %>
+																<% @plaza.each do |plaza| %>
+																<li style="width: 100%;">
+																	en&nbsp;&nbsp;<i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp;<b><%= link_to plaza.name, user_plaza_path(id: plaza, user_id: current_user), {style: "color: #777777;"} %>.</b>
+																</li>
+																<% end %>
+															<% end %>
+														</li>
+											    </ul>
+											  </li>
+											</ul>
+											<ul class="" style="width: 100%; margin-top: 20px; padding-top: 10px; border-top: 1px solid #e6e9ec; padding-left: 10px;">
+												<li style="width: 50%;">
+													<%= micropost.votes.count %>&nbsp; <span class="fa fa-thumbs-o-up" aria-hidden="true"></span>&nbsp;&nbsp;votantes&nbsp;&nbsp;|&nbsp;&nbsp;<%= micropost.comments.count %>&nbsp;<span class="numbercomments"><span class="fa fa-comment-o" aria-hidden="true"></span>&nbsp;&nbsp;comentarios</span>
+											  </li>
+											  <li style="width: 30%;">
+													
+												</li>
+											</ul>									
+										</div>
+									</div>
+								</div>
+							<% end %>
+						<% end %>
+			   	<% end %>
+			  <% end %>
+<%
+=end%>			      	
+
+	    <div id="Div3" style="display: none; "> 
+		   	<!-- consultas ya votadas -->
+		   	<% if @petitions.where(petition: true).any? %>
+				  <div style="border: 1px solid #dddfe2; margin-bottom: 15px;">
+				  	<ul style="padding-left: 0px; list-style: none; margin: 0px;">
+							<li style="background-color: white; padding: 10px; list-style: none;">
+								<h3 style="margin: 0px; width: 70%;"><b>Consultas ya votadas</b></h3>
+							</li>
+							<li>
+								<ul style="list-style: none; padding-left: 0px; display: inline-flex; width: 100%; background-color: white;">
+									<li style="background-color: white; padding: 10px; list-style: none; width: 80%;">
+										<i class="fa fa-info" aria-hidden="true"></i>&nbsp;
+					  		 		Index con todas las consultas e información sobre ellas.
+									</li>
+									<li style="float: right; padding: 10px;">
+										<%= link_to "Nueva consulta", '/petition', class: "btn btn-primary btn-sm", style: " padding: 5px; color: white; border: none;" %>
+									</li>										
+								</ul>
+							</li>									
+				  	</ul>
+				  </div>
+
+			   	<% @petitions_all.each do |micropost| %>
+			   		<% if Vote.where(micropost_id: micropost).where(user_id: current_user).any? %>
+				   		<% if micropost.petition == true %>
+								<div class="petition_index">
+									<ul class="principal" style="padding-left: 0px;">
+										<li style="max-height: 150px;">
+											<ul style="padding-left: 0px; list-style: none; display: inline-flex; overflow: hidden; width: 100%;">
+												<% if micropost.picture? %>
+													<li style="max-width: 30%;">
+														<!--  Imagen -->
+												    <div class="picture_content_petition_index" style=""> <%= image_tag (micropost.picture.url), class: "img_petition_index", style: "height: 200%;" %> 
+												    </div>
+													</li>
+												<% end %>	
+												<li style="width: 100%;">
+													<ul style="padding-left: 0px; display: block; list-style: none;">
+														<li class="title-petition" style="padding-top: 5px;">
+															<!--  Titulo -->
+															<h3 style="margin: 0px;"><b><%= link_to micropost.title, micropost_path(id: micropost.id), style: "color: black;" %></b></h3>
+														</li>
+														<li class="content" style="padding-top: 5px;">
+															<!--  Contenido texto -->
+															<%= truncate(micropost.content, :length => 100) %>
+															<%= link_to ".more", controller: "microposts", action: "show", id: micropost.id %>
+														</li>														
+													</ul>
+												</li>
+										
+											</ul>
+										</li>
+
+										<div class="votos_seguidores">
+											<div style="font-size: 14px"><b>Lo que opinan tus amigos</b></div>
+											<% @seguidores = current_user.following.count %>
+											<% @votos_post_seguidores = Vote.where(micropost_id: micropost).where(user_id: current_user.following) %>
+											<% @votos_post_seguidores.first(10).each do |votos_seguidores| %>
+												<% @seguido_voto = User.where(id: votos_seguidores.user_id) %>
+												<% @seguido_voto.each do |seguido| %>
+													<b><%= link_to seguido.name, seguido, {style: "color: #7e7e81;"} %></b>&nbsp;
+													<% if votos_seguidores.like == 1 %>
+									          <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true" style="color: green;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            apoya la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% else %>
+									          <i class="fa fa-thumbs-o-down fa-lg" aria-hidden="true" style="color: red;"></i>&nbsp;
+									          <% if micropost.petition == true %>
+									            rechaza la iniciativa &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% else %>
+									            no le gusta el post &nbsp;&nbsp;|&nbsp;&nbsp;
+									          <% end %>
+									        <% end %>
+												<% end %>
+											<% end %>
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario" style="width: 100%; font-size: 12px; padding: 0px;">
+											  <li style="display: inline-flex; border-left: 1px solid #dddfe2; padding: 5px; line-height: 8px; text-align: center; width: 33%; ">
+											  	<% if micropost.plaza_id != nil %>
+														<ul style="padding-left: 0px; display: block;">
+															<li class="right" style="align-items: center; margin-bottom: 10px;">
+							                  <%# porcentaje = porcetaje de votos emitidos por seguidores de la plaza, votos_seguidores / seguidores %>
+							                  <% @votos_seguidores = Vote.where(micropost_id: micropost) %>
+							                  <% @grupo_seguidores = Group.where(plaza_id: params[:plaza_id]) %>
+							                  <% if @votos_seguidores.any? %>
+							                    <% @votos_seguidores.count %>
+							                    <% @votos_seguidores_positivos = @votos_seguidores.where(like: 1) %>
+							                    <% @votos_seguidores_positivos_porcentaje = @votos_seguidores_positivos.count * 100 / (@votos_seguidores.count) %>
+							                    <% if @votos_seguidores.any? %>
+							                      <% @porcentaje = (@votos_seguidores.count*100 / (@grupo_seguidores.count)) %>
+							                    <% else %>
+							                      <% @porcentaje = 0 %>
+							                    <% end %>
+
+							                    <% @valor_limite = 67 %>
+							                    <% @votos = Vote.where(:micropost_id => micropost) %>
+							                    <% @votos = @votos.count %>
+							                    <% @grupo_seguidores.count %> 
+							                    <% @votos_seguidores.count %> 
+							                    <% @votos_seguidores_positivos.count %> 
+							                    <% @votos_seguidores_positivos_porcentaje %>
+							                    <% @porcentaje %>
+							                    <% (1*100/(2)) %> 
+							                 
+							                    <% if @porcentaje >= @valor_limite %>
+							                      <% if @votos_seguidores_positivos_porcentaje > 1/(2)*100 %>
+							                        <button type="button" class="btn btn-success" style="margin: 0px; font-size: 12px; padding: 3px;"><span class="">Aprobada</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                      <% else %>
+							                        <button type="button" class="btn btn-danger" style="margin: 0px; font-size: 12px; padding: 3px;"><span class="">Denegada</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                      <% end %>
+							                    <% else %>
+							                      &nbsp;<button type="button" class="btn btn-danger" style="background-color: white; border: 1px solid #0084B4; color: #0084B4; margin: 0px; font-size: 12px; padding: 3px;"><span class="">In progress</span> <%= @porcentaje %><i class="fa fa-percent" aria-hidden="true"></i></button>
+							                    <% end %>
+							                  <% else %>
+							                    <div style="line-height: 12px; text-align: center;"><b>0 votos</b></div>
+							                  <% end %>
+							                </li>														
+														</ul>
+													<% else %>
+														<button type="button" class="btn btn-success" style="margin: 0px; margin-bottom: 10px; font-size: 12px; padding: 3px; background-color: white; border: 1px solid grey; color: grey;"><span class="">Consulta pública</span></button> 
+													<% end %>
+												</li>												  										  
+											  <li class="" style="display: inline-flex; width: 66%; font-size: 14px; padding-top: 5px; text-align: center;">
+											  	
+											  	<div style="align-items: center;">
+											  		<%= micropost.votes.where(like: 1).count %> defensores&nbsp;&nbsp;|&nbsp;&nbsp;
+											  	</div>
+													
+											  	<div style="align-items: center;">
+														<% if micropost.votes.count > 0 %>
+															<% @porcentaje_positivos =  micropost.votes.where(like: 1).count*100/(micropost.votes.count) %>
+						                	<% if @porcentaje_positivos >= 50 %>
+							                	<div style="color: green; font-size: 14px;">
+							                		<i class="fa fa-thumbs-o-up" aria-hidden="true"></i> (<%= @porcentaje_positivos %> %)
+							                	</div>
+							                <% else %>
+							                	<div style="color: red; align-items: center;">
+							                		<i class="fa fa-thumbs-o-down" aria-hidden="true"></i> (<%= @porcentaje_positivos %> %)
+							                	</div>
+							                <% end %>							                	
+						                <% else %>
+						                  0 votos
+						                <% end %>											  		
+											  	</div>
+															
+											  </li>															
+											</ul>								
+										</div>
+
+										<div class="usuario">
+											<ul class="usuario" style="width: 100%; font-size: 12px; padding: 0px; margin-bottom: 10px;">
+												<li class="block" style="width: 5%;">
+										      <%= image_tag (micropost.user.foto.url), class: "img-circle", size: 28 if micropost.user.foto? %>
+										  	</li>
+										    <li style="width: 100%;">	
+										      <ul style="padding-left: 10px;">
+										        <li style="width: 100%; padding-left: 5px; padding-right: 5px;">
+										          <b><%= link_to micropost.user.name, micropost.user, style: "color: #4d4d4d;" %></b>
+												    	<% if micropost.hashtag1? %>
+																 sobre &nbsp; <i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i>
+                            		<b><%= link_to micropost.hashtag1, hashtag_micropost_path(id: micropost.hashtag1), style: "color: #9542f4;" %></b>
+															 <% end %>
+
+																<% if micropost.plaza_id? %>
+																	<% @plaza =  Plaza.where(:id => micropost.plaza_id) %>
+																	<% @plaza.each do |plaza| %>
+																		en&nbsp;&nbsp;<i class="fa fa-circle-o" aria-hidden="true"></i>&nbsp;<b><%= link_to plaza.name, user_plaza_path(id: plaza, user_id: current_user), {style: "color: #777777;"} %>.</b>
+																<% end %>
+															<% end %>
+														</li>
+											    </ul>
+											  </li>
+											</ul>								
+										</div>
+
+									</ul>
+								</div>
+							<% end %>
+			   		<% else %>
+
+						<% end %>
+			   	<% end %>
+			  <% end %>
+	    </div>		    		
+
+		</div>
+
+		<div class="col-sm-4" style="margin-top: 1px;">
+	    <%# render 'shared/lista' %>
+		  <%= render 'microposts/petition_short' %>
+		</div>
+
+  </div>
+</div>
+
+
+
+<script>
+ var divs = ["Div1", "Div2", "Div3"];
+    var visibleDivId = null;
+    function divVisibility(divId) {
+      if(visibleDivId === divId) {
+        visibleDivId = null;
+      } else {
+        visibleDivId = divId;
+      }
+      hideNonVisibleDivs();
+    }
+    function hideNonVisibleDivs() {
+      var i, divId, div;
+      for(i = 0; i < divs.length; i++) {
+        divId = divs[i];
+        div = document.getElementById(divId);
+        if(visibleDivId === divId) {
+          div.style.display = "block";
+        } else {
+          div.style.display = "none";
+        }
+      }
+    }
+</script>

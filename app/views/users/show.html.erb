@@ -1,0 +1,363 @@
+<div class="container">
+  <% provide(:title, @user.name) %>
+  <div class="row">
+    <div class="col-sm-2">
+        <div class="plaza_stats">
+          <div>
+            <div class="background_img"></div>
+            <ul class="plaza_name_img">
+              <li>
+                <ul>
+                  <li>
+                    <div class="plaza_img">
+                      <%= image_tag @user.foto.url, class: "img-circle", size: 100  if @user.foto? %> 
+                    </div>
+                  </li>
+                  <li class="texto">
+                    <ul style="list-style: none; padding: 0px;">
+                      <li>
+                        <div class="plaza_name">
+                          <h3 style="margin: 0px; font-weight: bolder; font-size: 22px;"><%= @user.name %></h3>
+                        </div>
+                      </li>
+                      <% if @user.description? %>
+                      <li class="description">
+                        <%= @user.description %>
+                      </li>
+                      <% end %>                
+                    </ul>
+                  </li>                  
+                </ul>
+              </li>
+              
+
+              <li style="width: 100%; text-align: center; color: #7e7e81; padding-top: 30px;">                
+                <ul style="display: inline-flex; padding: 5px; width: 100%; border-top: 1px solid #e6e9ec; color: #7e7e81; ">
+
+                </ul>
+              </li>
+              <li style="width: 100%; text-align: center; color: #7e7e81;">
+                <ul style="display: inline-flex; padding: 5px; width: 100%; ">
+                  <li style="width: 20%; border: none;">
+                    <!-- <a href="<%= followers_user_path(@user) %>"> -->
+                      <%= link_to  users_path(seguidores_id: params[:id]) do %>
+                        <i class="fa fa-users" aria-hidden="true"></i> <%= @user.followers.count %>
+                      <% end %>
+                    <!-- </a> -->
+                  </li>
+                  <li style="width: 20%; border: none;">
+                    <!-- <a href="<%= following_user_path(@user) %>"> -->
+                      <%= link_to  users_path(seguidos_id: params[:id]) do %>
+                      <i class="fa fa-user-o" aria-hidden="true"></i> <%= @user.following.count %>
+                      <% end %>
+                    <!-- </a> -->
+                  </li>                 
+                  <li style="width: 20%; border: none;">
+                    <%= link_to petitions_public_path(user: params[:id]) do %>
+                      <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;<%= @microposts.where(:petition => true).count %>
+                    <% end %>
+                  </li>                              
+                  <li style="width: 20%; border: none;">
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>&nbsp;<%= Vote.where(:micropost_id => @microposts).count %>                
+                  </li>
+                  <li style="width: 20%; border: none;">
+                    <%= link_to user_plazas_path(user_id: @user) do %>
+                      <i class="fa fa-circle-o" aria-hidden="true"></i>
+                      <%= @plazas_grupos.count %>
+                    <% end %>
+                  </li>                
+                </ul>
+              </li>
+              <li>
+                <%= render 'follow_form' if logged_in? %>
+              </li>                           
+            </ul>
+          </div>
+        </div>
+
+<%
+=begin%>            
+            <li class="lista_block">
+              <ul class="inline">
+                <li>
+                  <i class="fa fa-user-o" aria-hidden="true"></i>   Seguidores
+                </li>
+                <li class="right">
+                  <a href="<%= followers_user_path(@user) %>">
+                    <%= @user.followers.count %>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="lista_block">
+              <ul class="inline">
+                <li>
+                  <i class="fa fa-user-o" aria-hidden="true"></i>   Seguidos
+                </li>
+                <li class="right">
+                  <a href="<%= following_user_path(@user) %>">
+                    <%= @user.following.count %>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="lista_block">
+              <ul class="inline">
+                <li>
+                  <i class="fa fa-envelope-open-o" aria-hidden="true"></i>   Iniciativas
+                </li>
+                <li class="right">
+                  <%= @microposts.where(:petition => true).count %>
+                </li>
+              </ul>
+            </li>
+            <li class="lista_block">
+              <ul class="inline">
+                <li>
+                  <i class="fa fa-hand-o-up" aria-hidden="true"></i>   Votos totales
+                </li>
+                <li class="right">
+                  <%= Vote.where(:micropost_id => @microposts).count %>
+                </li>
+              </ul>
+            </li>
+            <li class="lista_block">
+              <ul class="inline">
+                <li>
+                  <i class="fa fa-circle-o" aria-hidden="true"></i>   Círculos con los que colabora
+                </li>
+                <li class="right">
+                  <%= @plazas_grupos.count %>
+                </li>
+              </ul>
+            </li>
+<%
+=end%>            
+    </div>
+
+    <div class="col-sm-4">
+
+      <% if @user.linkedin? %>
+        <div class="aside_content">
+          <ul class="inline" style="margin-bottom: 0px;">
+            <li class="titulo">
+              <h5 style="margin: 0px; font-weight: 700;">Perfil de linkedIN</h5>             
+            </li>
+            <li class="lista_block" style="position: absolute; right: 20px; padding-top: 5px; padding-right: 0px;">
+              <%= link_to image_tag("linkedinlogo.png", size: 25), "#{@user.linkedin}" if @user.linkedin? %> 
+            </li>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if @user.candidate == true %>  
+        <div class="aside_content">
+          <ul class="inline" style="margin-bottom: 0px;">
+            <li class="titulo">
+              <h5 style="margin: 0px; font-weight: 700;">Video presentación candidato</h5>             
+            </li>
+            <li class="lista_block" style="position: absolute; right: 20px; padding-top: 5px; padding-right: 0px;">
+               * En desarrollo
+            </li>
+          </ul>
+        </div>
+      <% end %>         
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <h5 style="margin: 0px;"><b>Temas que interesan al usuario</b></h5>
+          </li>
+          <li class="lista_block">
+            <ul class="inline">
+              <li>
+                <% @array_of_hashtag1 = [] %>
+                <% @array_of_hashtag1 = @microposts.map(&:hashtag1) %>
+                <% @array_of_hashtag1 = @array_of_hashtag1.uniq %>
+                <% @array_of_hashtag1.first(100).take(10).each do |hashtag1| %>
+                  <% if hashtag1.empty? %>
+                  <% else %>
+                    <h5 style="margin: 0px; display: inline-flex;"><b><i class="fa fa-comments-o" style="font-size: 16px; color: #9542f4;"></i> <%= link_to hashtag1, hashtag_micropost_path(hashtag1), style: "font-size: 13px; font-weight: bold; color: #9542f4"  %></b></h5>&nbsp;|&nbsp;
+                  <% end %>  
+                <% end %>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <ul style="padding: 0px; display: inline-flex; width: 100%;">
+              <li style="border: none; width: 100%;">
+                <h5 style="margin: 0px; font-weight: 700;"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Consultas ciudadanas creadas</h5>                
+              </li>
+              <li style="border: none; margin-top: 5px; text-align: right; width: 25%;">
+                <%= link_to "Ver todas", petitions_public_path(user: params[:id]) %>
+              </li>
+            </ul>
+          </li>
+          <% @peticiones.first(5).each do |petition| %>
+          <li class="lista_block">
+            <ul class="inline" style="width: 100%;">
+              <li class="inline">
+                <%= image_tag petition.picture.url, size: 50 if petition.picture? %>
+              </li>
+              <li class="inline" style="width: 100%;">
+                <span class="nombres"><h5 style="margin: 0px; line-height: 20px;"><%= link_to petition.title, micropost_path(id: petition), style: "color: #444;" %></span>
+              </li>
+              <li class="right" style="padding-top: 10px;">
+                <% @votos = Vote.where(:micropost_id => petition) %>
+                <% @votos_realizados = @votos.count %>
+                <% if @votos_realizados != 0 %>
+                <% @votos_positivos = @votos.where(:like => true).count %>
+                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <%= @votos_positivos*100/(@votos_realizados) %> %
+                <% else %>
+                  0 %
+                <% end %>
+              </li>
+            </ul>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <ul style="padding: 0px; display: inline-flex; width: 100%;">
+              <li style="border: none; width: 100%;">
+                <h5 style="margin: 0px;"><b><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Iniciativas apoyadas por <%= @user.name %></b></h5>               
+              </li>
+              <li style="border: none; margin-top: 5px; text-align: right; width: 25%;">
+                <%= link_to "Ver todas", petitions_public_path(user: params[:id], participation: :like) %>
+              </li>
+            </ul>            
+          </li>
+          <% @votos = Vote.where(:user_id => @user.id).where(like: 1) %>
+          <% @votos.first(10).each do |voto| %>
+            <% @peticiones_votadas = @peticiones_all.where(id: voto.micropost_id) %>
+            <% @peticiones_votadas.first(5).each do |petition| %>
+              <li class="lista_block">
+                <ul class="inline">
+                  <li class="inline">
+                    <%= image_tag petition.picture.url, size: 50 if petition.picture? %>
+                  </li>
+                  <li class="inline">
+                    <span class="nombres" style="width: 80%;"><h5 style="margin: 0px; line-height: 20px;"><%= link_to petition.title, micropost_path(id: petition), style: "color:#444;" %></h5></span>
+                  </li>
+                  <li class="right" style="padding-top: 10px;">
+                    <% @votos = Vote.where(:micropost_id => petition) %>
+                    <% @votos_realizados = @votos.count %>
+                    <% if @votos_realizados != 0 %>
+                    <% @votos_positivos = @votos.where(:like => true).count %>
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <%= @votos_positivos*100/(@votos_realizados) %> %
+                    <% else %>
+                      0 %
+                    <% end %>
+                  </li>
+                </ul>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="aside_content">
+        <ul class="principal">
+          <li class="titulo">
+            <ul style="padding: 0px; display: inline-flex; width: 100%;">
+              <li style="border: none; width: 100%;">
+                <h5 style="margin: 0px;"><b><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;Iniciativas rechazadas por <%= @user.name %></b></h5>               
+              </li>
+              <li style="border: none; margin-top: 5px; text-align: right; width: 25%;">
+                <%= link_to "Ver todas", petitions_public_path(user: params[:id], participation: true) %>
+              </li>
+            </ul>             
+
+          </li>
+          <% @votos = Vote.where(:user_id => @user.id).where(dislike: 1) %>
+          <% @votos.first(10).each do |voto| %>
+            <% @peticiones_votadas = @peticiones_all.where(id: voto.micropost_id) %>
+            <% @peticiones_votadas.first(5).each do |petition| %>
+              <li class="lista_block">
+                <ul class="inline">
+                  <li class="inline">
+                    <%= image_tag petition.picture.url, size: 50 if petition.picture? %>
+                  </li>
+                  <li class="inline" style="width: 100%;">
+                    <span class="nombres" style="width: 80%;"><h5 style="margin: 0px; line-height: 20px; font-weight: normal;"><%= link_to petition.title, micropost_path(id: petition), style: "color:#444;" %></h5></span>
+                  </li>
+                  <li class="right" style="padding-top: 10px;">
+                    <% @votos = Vote.where(:micropost_id => petition) %>
+                    <% @votos_realizados = @votos.count %>
+                    <% if @votos_realizados != 0 %>
+                    <% @votos_positivos = @votos.where(:like => true).count %>
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <%= @votos_positivos*100/(@votos_realizados) %> %
+                    <% else %>
+                      0 %
+                    <% end %>
+                  </li>
+                </ul>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="aside_content">
+        <ul class="principal" >
+          <li class="titulo">
+            <ul style="padding: 0px; display: inline-flex;">
+              <li style="width: 80%; border: 0px; display: inline-flex;">
+            <h5 style="margin: 0px;"><i class="fa fa-circle-o fa-lg" aria-hidden="true"></i>&nbsp;<b>Lobbies en los que participa <%= @user.name %></b></h5>
+              </li>
+              <li style="position: absolute; right: 25px; border: 0px;">
+                <span style=""><%= link_to "Ver todos", user_plazas_path(user_id: @user) %></span>
+              </li>
+            </ul>
+          </li>
+          <% @plazas_grupos.first(5).each do |grupo| %>
+            <% @plaza_seguida = Plaza.where(:id => grupo.plaza_id) %>
+            <% @plaza_seguida.each do |plaza| %>
+              <% if plaza.action != true %>
+                <li class="lista_block">
+                  <ul class="inline">
+                    <li class="inline">
+                      <%= image_tag plaza.foto.url, class: "img-circle", size: 55 if plaza.foto? %>
+                    </li>
+                    <li class="inline">
+                      <span class="nombres" style="width: 80%;"><h5 style="margin: 0px; line-height: 20px;"><b><%= link_to plaza.name, user_plaza_path(id: plaza.id, user_id: current_user.id), style: "color:#444" %></b></span>
+                    </li>
+                  </ul>
+                </li>
+              <% end %>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+<%
+=begin%>
+      <%= render 'plazas/action_short' %>
+
+      <%= render 'plazas/causa_short' %>
+<%
+=end%>      
+
+    </div>
+
+    <div class="col-sm-6">
+      <% if @microposts.any? %>
+        <h5 style="margin: 0px;"><b>Posts(<%= @microposts.count %>)</b></h5>
+        <ol class="microposts" style="padding-top: 10px;">
+          <%= render @microposts %>
+        </ol>
+        <%= will_paginate @microposts %>
+      <% else %>
+        El usuario <%= @user.name %> no tiene publicaciones, pero te mostramos algunos usuarios que podrían interesarte. 
+      <% end %>
+    </div>
+
+  </div>
+</div>

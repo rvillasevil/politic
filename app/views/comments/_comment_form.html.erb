@@ -1,0 +1,17 @@
+              
+  <button type="button" class="btn btn-link btn-sm" style="padding: 0px;" data-toggle="collapse" data-target="#<%= @comment.id %>">
+    <i class="fa fa-reply" aria-hidden="true"></i>
+  </button>
+
+  <div id="<%= @comment.id %>" class="collapse">
+    <div class="form_comentario" style="display: inline-flex; padding: 0px;">
+      <%= f.text_area :contenido, placeholder: "Add a comment...", style: "height: 35px; width: 300px; display: inline-flex;" %>
+      <%= f.hidden_field :user_id, :value => current_user.id %>
+      <%= f.hidden_field :reply, value: @comment.id %>
+    </div>
+    <div class="comentario" style="display: inline-flex; padding: 0px;">
+      <%= button_tag(class: "btn btn-primary btn-sm", style: "padding: 5px 3px; background-color: #c2d7f9; border: 0px; color: black;") do %>
+        Reply
+      <% end %>
+    </div>              
+  </div>

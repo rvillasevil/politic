@@ -1,0 +1,84 @@
+<% provide(:title, 'Tus Círculos') %>
+	<div class="container">
+    <div class="row">
+      <aside class="col-sm-2">
+        <section class="user_info">
+          <%= render 'shared/user_info' %>
+        </section>
+        <section class="stats">
+          <%= render 'shared/stats' %>
+        </section>
+      </aside>
+      <div class="col-sm-7">
+        <div class="instrucciones" style="margin-top: 10px;">
+          Nuestros representantes de cada círculo administrativo. Son aquellos que tienen una mayor participación dentro del círculo, expresada en número de seguidores pero también en forma de propuestas y votos.
+        </div>
+				<ul class="plazas">
+           <li style="border-bottom: 1px solid #eeeeee; display: inline-flex; width: 100%;">
+            <span style="font-size: 15px;"><b>Todos los círculos de 
+              <% @usuario = User.find(params[:user_id]) %>
+              <%= @usuario.name %>&nbsp;&nbsp;</b></span>    
+              <% if params[:user_id] = current_user %>
+                <%= image_tag @usuario.foto.url, class: "img-circle", size: 40 if @usuario.foto? %>
+              <% end %>
+          </li>         
+          <li style="border-bottom: 1px solid #eeeeee; display: inline-flex; width: 100%; ">
+            <ul style="display: inline-flex; padding: 0px;">
+              <li style="padding: 5px;">
+                <span style="font-size: 13px;"><b><%= link_to "Ver todos los círculos", '/allplazas' %></b></span>
+              </li>
+              <li style="padding-top: 0px; padding-bottom: 3px; position: absolute; right: 15px;">
+                <button type="button" class="btn btn-primary btn-sm"><span style="font-size: 12px;"><%= link_to "Nuevo círculo", new_user_plaza_path(:user_id => current_user.id), {style: "color: white"} %></span></button>
+              </li>
+            </ul>
+          </li>
+	  			<%# render @plazas %>
+          <% @plazas.each do |plaza| %>
+            <% if plaza.action != true %>
+              <li style="padding-left: 0px; border-bottom: 1px solid #eeeeee;"> 
+                <ul style="display: inline-flex; padding-left: 15px;">
+                  <li style="padding: 10px 0px;">
+                    <%= image_tag plaza.foto.url, class: "img-circle", size: 55 if plaza.foto? %>
+                  </li>
+                  <li style="padding: 0px;">
+                    <ul class="texto_plaza" style="padding-left: 10px; padding-top: 5px;">
+                      <li>
+                        Círculo <b><%= link_to plaza.name, user_plaza_path(id: plaza.id) %></b>
+                      </li>
+                      <li style="font-size: 13px;">
+                        <b><%= Group.where(:plaza_id => plaza.id).count %> seguidores.</b>
+                      </li>
+                        <% @peticiones = Micropost.where(:plaza_id => plaza.id).where(:petition => true).count %>
+                      <li style="font-size: 13px; color: #8c8c8c;">
+                        <% @votos = Vote.where(:micropost_id => @peticiones).where(:user_id => current_user.id).count %>
+                        <% @votos_totales = Vote.where(:micropost_id => @peticiones).count %>
+                        <%= @votos_pendientes = @votos_totales - @votos %> peticiones pendientes.
+                        <% if current_user.admin?  %>
+                        | <%= link_to "delete", plaza, method: :delete,
+                                        data: { confirm: "You sure?" } %>
+                          <% end %>
+                      </li>
+                      <li style="font-size: 11px; padding-top: 5px;"> 
+                        <% if plaza.user_id == current_user.id %>
+                          Admin
+                        <% else %>
+                          <% @admin = User.where(:id => plaza.user_id).first %>
+                          Admin: <%= link_to @admin.name, @admin %>
+                        <% end %>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            <% end %>
+          <% end %>
+				</ul>
+      </div>
+      <aside>
+        <div class="col-sm-3">
+          <h4>Nuestros candidatos</h4>
+          <h4>Círculos recomendados para tí.</h4>
+        </div>
+      </aside>
+  	</div>
+	</div>

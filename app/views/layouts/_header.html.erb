@@ -1,0 +1,150 @@
+<header class="navbar navbar-fixed-top" style="margin-bottom: 0px;">
+  <div class="container" style="padding: 0px;">
+      <div class="icons_list">
+        <% if logged_in? %>
+          <ul class="icons">
+            <li class="dropdown" style="width: 80%;">
+              <%= link_to root_path do %>
+                <div class="logo" style="display: inline-flex;">
+                  <i class="fa fa-university fa-lg" aria-hidden="true" style="color: white;"></i>&nbsp;&nbsp;<h3 style="font-size: 18px; font-weight: lighter; font-family: 'Open Sans'; margin: 0px; color: white;"> polittizen</h3>
+                </div>
+              <% end %>               
+            </li>
+            <li class="dropdown">
+              <%= link_to user_plazas_path(current_user) do %>
+                <div>
+                  <div class="icon_mobile">
+                    <i class="fa fa-circle-o fa-lg" aria-hidden="true" style="color: white"></i>
+                  </div>
+                  <div class="icon_web">
+                    <i class="fa fa-circle-o fa-lg" aria-hidden="true" style="color: white"></i>
+                    <span class="logo"> Lobbies</span>
+                  </div>
+                </div>
+              <% end %>
+            </li>
+            <li class="dropdown">
+              <%= link_to '/lista' do %>              
+                <div>
+                  <div class="icon_mobile">
+                    <i class="fa fa-university fa-lg" aria-hidden="true" style="color: white"></i>
+                  </div>
+                  <div class="icon_web">
+                    <i class="fa fa-university fa-lg" aria-hidden="true" style="color: white"></i><span class="icon"> Candidatos</span>                      
+                  </div>                 
+                </div>
+              <% end %>
+            </li>
+            <li class="dropdown">
+              <%= link_to users_path do %>
+                <div>
+                  <div class="icon_mobile">
+                    <i class="fa fa-users fa-lg" aria-hidden="true" style="color: white"></i>
+                  </div>
+                  <div class="icon_web">
+                    <i class="fa fa-users fa-lg" aria-hidden="true" style="color: white"></i><span class="icon"> Polittizens</span>                     
+                  </div>                  
+                </div>
+              <% end %>
+            </li>
+            <li class="dropdown">
+              <%= link_to '/petitions' do %>
+                <div>
+                  <% @votos_petitions = Vote.where(micropost_id: current_user.feed_petition).where(user_id: current_user).count %>
+                  <% @pendientes = current_user.feed_petition.count - @votos_petitions %>
+
+                  <div class="icon_mobile">
+                    <i class="fa fa-envelope-open fa-lg" aria-hidden="true" style="color: white"></i>
+                    <% if @pendientes > 0 %>
+                      <div style="background: red; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+                            <b><%= @pendientes %></b>
+                      </div>
+                    <% else %>
+                      <div style="background: green; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+                            <b><%= @pendientes %></b>
+                      </div>
+                    <% end %>                    
+                    
+                  </div>
+                  
+                  <div class="icon_web">
+                    <i class="fa fa-envelope-open fa-lg" aria-hidden="true" style="color: white"></i>
+                    <% if @pendientes > 0 %>
+                      <div style="background: red; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+                            <b><%= @pendientes %></b>
+                      </div>
+                    <% else %>
+                      <div style="background: green; border-radius: 0.8em; -moz-border-radius: 0.8em; -webkit-border-radius: 0.8em; color: white; display: inline-block; font-weight: bold; line-height: 1.6em; text-align: center; width: 1.6em; font-size: 12px; color: white; margin-left: -7px;">
+                            <b><%= @pendientes %></b>
+                      </div>
+                    <% end %>
+                    <span class="icon"> Consultas</span>
+                    
+                                     
+                  </div>                  
+                </div>
+              <% end %>
+            </li>
+            <li class="dropdown"> 
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">&nbsp;
+                  <div class="icon_mobile" style="display: inline-flex;">
+                    <i class="fa fa-user fa-lg" aria-hidden="true" style="color: white; margin-top: 5px;"></i>
+                    &nbsp;<span class="icon"> You</span><b class="caret" style="display: inline-flex; color: white; margin-top: 10px;"></b>
+                  </div>
+              </a>
+
+              <ul class="dropdown-menu" style="left: auto; right: 0px; font-family: 'Helvetica'; font-size: 14px; text-align: left;">
+                <li style="text-align: left; margin-top: 10px;">
+                  <%= link_to current_user do %>
+                  <%= image_tag current_user.foto.url, class: "img-rounded", size: 20 if current_user.foto? %> <b>Perfil</b>
+                  <% end %>
+                </li>
+                <li style="text-align: left; margin-top: 10px;">
+                  <%= link_to edit_user_path(current_user) do %>
+                  <i class="fa fa-cogs" aria-hidden="true" style="color: #1DA1F2;"></i> <b>Configuración</b>x
+                  <% end %>
+                </li>
+                <li style="text-align: left; margin-top: 10px;">
+                  <%= link_to user_plazas_path(current_user) do %>
+                  <i class="fa fa-circle-o" aria-hidden="true" style="color: #1DA1F2;"></i> <b>Tus Lobbies</b>
+                  <% end %>                    
+                </li>                                            
+                <li style="text-align: left; margin-top: 10px;">
+                  <%= link_to edit_administrative_user_path( current_user), style: "color: #f4ac41;" do %>
+                  <button type="button" class="btn btn-primary btn-sm" style="width: 100%; background-color: white; color: #0084B4; border: 3px solid #f4ac41; border-radius: 15px;">
+                    <i class="fa fa-circle-o" aria-hidden="true" style="color: #f4ac41;"></i> Lobbies Administrativos
+                  </button>
+                  <% end %>                    
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <%= link_to logout_path, method: "delete" do %>
+                    <i class="fa fa-sign-out" aria-hidden="true"></i> <b>Salir</b>
+                    <% end %>
+                </li>
+              </ul>
+            </li>
+        <% else %>
+            <ul class="icons" style="padding-right: 30px; padding-left: 30px;">
+              <li class="dropdown-home" style="width: 60%; padding-top: 12px; text-align: left;">
+                <%= link_to root_path do %>                
+                  <i class="fa fa-university fa-lg" style="color: white;"></i>&nbsp;&nbsp;
+                  <span style="color: white; font-size: 18px; font-weight: lighter;">polittizen</span>
+                <% end %>
+              </li>
+              <li class="dropdown-home" style="width: 20%;">
+                <%= link_to login_path do %>
+                    <span style="color: white">Login</span>
+                <% end %>
+              </li>
+              <li class="dropdown-home" style="width: 20%;">
+                <%= link_to signup_path do %>
+                    <span style="color: white">Signup</span>
+                <% end %>
+              </li>
+            </ul>
+          </ul>
+        <% end %>
+      </div>
+  </div>
+</header>
